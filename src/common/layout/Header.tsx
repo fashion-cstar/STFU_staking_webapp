@@ -93,7 +93,7 @@ export default function Header() {
 
   return (
     <div style={{ zIndex: 2 }}>
-      <div className="hidden lg:block fixed top-0 left-0 py-3 w-full items-center border-b border-b-[#112b40] bg-[#131723]/[.95] shadow-lg">
+      <div className="hidden lg:block fixed top-0 left-0 py-3 w-full items-center bg-[#000000]/[.95] shadow-lg">
         <div className="flex flex-col w-full justify-center items-center">
           <div className="w-full bg-[#6FFF39] h-[10px] mb-2" />
           <div className="flex w-full px-10 max-w-[1440px] items-center justify-between">

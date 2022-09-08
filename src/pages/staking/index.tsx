@@ -8,7 +8,7 @@ export const Staking = () => {
 
   return (
     <div className='w-full flex flex-col-reverse lg:flex-row lg:items-stretch'>
-      <div className='lg:basis-1/3 w-full bg-black min-w-[350px]'>
+      <div className="lg:basis-1/3 w-full bg-black min-w-[350px] bg-bottom bg-no-repeat bg-[url('./assets/bg_leftside.svg')]">
         <YourStake />
       </div>
       <div className='lg:basis-2/3 w-full bg-white p-5 flex justify-center relative'>

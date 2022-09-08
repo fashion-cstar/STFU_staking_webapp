@@ -25,11 +25,11 @@ export const YourStake = () => {
                     </div>
                 </div>
             </div>
-            <div className='w-full relative overflow-hidden min-h-[300px]'>
+            {/* <div className='w-full relative overflow-hidden min-h-[300px]'>
                 <div className="w-[630px] absolute top-0 right-0">
                     <Bg_svg_left />
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

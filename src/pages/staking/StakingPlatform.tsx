@@ -1,11 +1,29 @@
 import { Button } from "@mui/material"
 import { Web3ModalButton } from "src/common/WalletConnect/Web3Modal"
 import { useEthers } from '@usedapp/core'
+import SubmitTextInput from "src/common/SubmitTextInput"
+import { useState } from "react"
 
 export const StakingPlatform = () => {
     const { account } = useEthers()
     const activateProvider = Web3ModalButton()
-    const isConnected = !!account
+    const [isBorder, setIsBorder] = useState(false)
+    const [submitText, setSubmitText] = useState('')
+    const handleFocus = () => {
+        setIsBorder(true)
+    }
+
+    const handleBlur = () => {
+        setIsBorder(false)
+    }
+
+    const onChange = (text: string) => {
+        setSubmitText(text)
+    }
+
+    const onSubmit = () => {
+
+    }
 
     return (
         <>
@@ -32,7 +50,7 @@ export const StakingPlatform = () => {
                             variant="outlined"
                             color="secondary"
                             onClick={activateProvider}
-                            sx={{ borderColor: "#7F41E4", width: '180px', height: '48px', fontFamily: 'agressive' }}
+                            sx={{ border: "3px solid #7F41E4", width: '180px', height: '48px', fontFamily: 'agressive' }}
                         >
                             <span className="text-[16px] md:text-[18px] text-black uppercase">Buy Token</span>
                         </Button>
@@ -69,6 +87,16 @@ export const StakingPlatform = () => {
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>staking contract</span>
                             <span className='text-white text-[12px] uppercase'>0x4fg...cas</span>
+                        </div>
+                        <div className='flex justify-between md:px-10 items-stretch'>
+                            <div className='w-full' style={{ border: isBorder ? "1px solid black" : "none" }} >
+                                <SubmitTextInput handleFocus={handleFocus}
+                                    handleBlur={handleBlur}
+                                    onChange={onChange} />
+                            </div>
+                            <div className='cursor-pointer bg-black text-white text-[12px] w-[100px] uppercase hover:bg-[#101010] flex justify-center items-center' onClick={onSubmit}>
+                                Submit
+                            </div>                            
                         </div>
                     </div>
                     <div className='w-full mt-4 text-center text-black text-[18px] md:text-[20px] uppercase'>timeline</div>
