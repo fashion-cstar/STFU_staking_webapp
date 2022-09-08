@@ -21,7 +21,7 @@ function Disconnect({ isMobile }: { isMobile: boolean }) {
             onClick={handleDisconnect}
             sx={{ borderColor: "#6FFF39", width: isMobile ? '100%' : '180px', height: isMobile ? '40px' : '48px', fontFamily: 'agressive' }}
             className="relative">
-            <span className="text-[16px] md:text-[20px] text-white">Disconnect</span>
+            <span className="text-[16px] md:text-[20px] text-white uppercase">Disconnect</span>
         </Button>
     )
 }
@@ -40,7 +40,7 @@ export default function Wallet({ isMobile }: { isMobile: boolean }) {
                     onClick={activateProvider}
                     sx={{ borderColor: "#6FFF39", width: isMobile ? '100%' : '180px', height: isMobile ? '40px' : '48px', fontFamily: 'agressive' }}
                 >
-                    <span className="text-[16px] md:text-[20px] text-white">Connect</span>
+                    <span className="text-[16px] md:text-[20px] text-white uppercase">Connect</span>
                 </Button>
             )}
             {isConnected && <Disconnect isMobile={isMobile} />}
