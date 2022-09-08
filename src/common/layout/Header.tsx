@@ -61,7 +61,7 @@ export default function Header() {
 
   const SideMenu = () => {
     return (
-      <div className={`w-full pt-6 pb-2 px-16 ${isNavOpen ? 'block' : 'hidden'}`}>
+      <div className={`w-full mt-4 pt-6 pb-2 px-16 ${isNavOpen ? 'block' : 'hidden'}`}>
         <div className='flex flex-col gap-5'>
           {Object.keys(SIDEBAR_ITEMS).map((key, index) => {
             const isActive = routeMatch(SIDEBAR_ROUTES[key])
@@ -131,7 +131,7 @@ export default function Header() {
         <div className="flex flex-col w-full justify-center items-center">
           <div className="w-full bg-[#6FFF39] h-[10px] mb-2" />
           <div className="flex w-full px-6 items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 mt-2">
               <a href="/"><Logo_mobile /></a>
               <LogoText_mobile />
             </div>
