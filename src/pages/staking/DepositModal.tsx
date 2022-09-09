@@ -43,11 +43,10 @@ export default function DepositModal({ isOpen, handleClose }: ModalProps) {
                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                             </button>
                         </div>
-                    </div>
-                    <hr className="w-full mt-1 sm:mt-2" style={{ borderTop: "1px solid #112030" }} />
+                    </div>                    
                     <div style={modalStyle}>
                         <div className='m-4 md:m-6 w-[250px] md:w-[420px]'>
-
+                            <div className='w-full text-center text-white text-[28px] md:text-[35px]'>Amount to stake</div>
                         </div>
                     </div>
                 </div>
