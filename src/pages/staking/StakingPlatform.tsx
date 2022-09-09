@@ -3,12 +3,15 @@ import { Web3ModalButton } from "src/common/WalletConnect/Web3Modal"
 import { useEthers } from '@usedapp/core'
 import SubmitTextInput from "src/common/SubmitTextInput"
 import { useState } from "react"
+import { BUY_STFU_URL } from "src/constants/AppConstants"
+import DepositModal from "./DepositModal"
 
 export const StakingPlatform = () => {
     const { account } = useEthers()
-    const activateProvider = Web3ModalButton()
+    const [isOpenDeposit, setIsOpenDeposit] = useState(false)
     const [isBorder, setIsBorder] = useState(false)
     const [submitText, setSubmitText] = useState('')
+
     const handleFocus = () => {
         setIsBorder(true)
     }
@@ -25,8 +28,17 @@ export const StakingPlatform = () => {
 
     }
 
+    const onCloseDeposit = () => {
+        setIsOpenDeposit(false)
+    }
+
+    const onDeposit = () => {
+        setIsOpenDeposit(true)
+    }
+
     return (
         <>
+            <DepositModal isOpen={isOpenDeposit} handleClose={onCloseDeposit} />
             <div className='hidden md:flex absolute w-[200px] pt-4 flex-col gap-1 top-0 left-0'>
                 <div className='h-2 w-full bg-black' />
                 <div className='h-2 w-full bg-black' />
@@ -49,7 +61,8 @@ export const StakingPlatform = () => {
                         <Button
                             variant="outlined"
                             color="secondary"
-                            onClick={activateProvider}
+                            href={BUY_STFU_URL}
+                            target="_blank"
                             sx={{ border: "3px solid #7F41E4", width: '180px', height: '48px', fontFamily: 'agressive' }}
                         >
                             <span className="text-[16px] md:text-[18px] text-black uppercase">Buy Token</span>
@@ -57,10 +70,10 @@ export const StakingPlatform = () => {
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={activateProvider}
+                            onClick={onDeposit}
                             sx={{ borderColor: "#6FFF39", width: '180px', height: '48px', fontFamily: 'agressive' }}
                         >
-                            <span className="text-[16px] md:text-[18px] text-black uppercase">Connect</span>
+                            <span className="text-[16px] md:text-[18px] text-black uppercase">Stake</span>
                         </Button>
                     </div>
                     <div className='w-full border border-b border-[#000000] mb-2' />
@@ -96,7 +109,7 @@ export const StakingPlatform = () => {
                             </div>
                             <div className='cursor-pointer bg-black text-white text-[12px] w-[100px] uppercase hover:bg-[#101010] flex justify-center items-center' onClick={onSubmit}>
                                 Submit
-                            </div>                            
+                            </div>
                         </div>
                     </div>
                     <div className='w-full mt-4 text-center text-black text-[18px] md:text-[20px] uppercase'>timeline</div>
