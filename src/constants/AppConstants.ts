@@ -58,7 +58,7 @@ export const RpcProviders: { [chainId in ChainId]?: JsonRpcProvider } = {
 }
 
 export const AppTokenAddress = "0x4D0cC4786b383e2C7846bA994546B85954924802"
-export const StakingContractAddress = "0xD2b0179c634d1a91760bFf1efb8Ad742FdB37416"
+export const StakingContractAddress = "0xfDb04cAaCB52f38c4f00b9E9DE708a83a4cbDC2E"
 
 export const BUY_STFU_URL = 'https://pancakeswap.finance/swap?outputCurrency=' + AppTokenAddress
 
