@@ -15,7 +15,7 @@ export const StakingPlatform = () => {
     const [isOpenDeposit, setIsOpenDeposit] = useState(false)
     const [isBorder, setIsBorder] = useState(false)
     const [submitText, setSubmitText] = useState('')
-    const { newRewards, poolInfo, totalStaked, holderUnlockTime, pendingReward, claimCallback, updateStakingStats } = useStaking()
+    const { newRewards, poolInfo, totalStaked, holderUnlockTime, pendingReward, blockTimestamp, claimCallback, updateStakingStats } = useStaking()
     const [isClaiming, setIsClaiming] = useState(false)
 
     const handleFocus = () => {
@@ -47,7 +47,7 @@ export const StakingPlatform = () => {
         try {
             claimCallback().then((res: any) => {
                 if (res.status === 1) {
-                    toast.success("Success! You've claimed your rewards!")
+                    toast.success("Claimed successfully!")
                     updateStakingStats()
                 } else {
                     toast.error(`Transaction reverted! Tx:${res.hash}`)
@@ -113,7 +113,7 @@ export const StakingPlatform = () => {
                     <div className='w-full bg-[#6FFF39] flex py-4 px-4 md:px-8 mb-12 flex-col gap-4'>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>Total pending rewards</span>
-                            <span className='text-white text-[12px] uppercase'>{formatEther(newRewards, 18, 2, true)}</span>
+                            <span className='text-white text-[12px] uppercase'>{formatEther(newRewards, 18, 4, true)}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>Last time reward</span>
@@ -153,7 +153,7 @@ export const StakingPlatform = () => {
                                 loadingPosition="start"
                                 color="primary"
                                 onClick={onClaim}
-                                disabled={isClaiming || !account || pendingReward.lte(0)}
+                                disabled={isClaiming || !account || pendingReward.lte(0) || blockTimestamp<holderUnlockTime}
                             >
                                 <span className='text-[20px] text-black'>{isClaiming ? 'Claiming ...' : "Claim Rewards"}</span>
                             </LoadingButton>

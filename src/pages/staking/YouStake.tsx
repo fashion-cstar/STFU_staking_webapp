@@ -22,7 +22,7 @@ export const YourStake = () => {
                     </div>
                     <div className='flex gap-1'>
                         <div className='basis-1/2 text-white text-[20px] w-full uppercase min-w-[170px]'>unclaimed</div>
-                        <div className='basis-1/2 text-[#6FFF39] text-[20px] w-full uppercase'>{`${formatEther(pendingReward, 18, 2, true).toLocaleString()}`}<span className='text-white text-[14px]'>{' '}STFU</span></div>
+                        <div className='basis-1/2 text-[#6FFF39] text-[20px] w-full uppercase'>{`${formatEther(pendingReward, 18, 4, true).toLocaleString()}`}<span className='text-white text-[14px]'>{' '}STFU</span></div>
                     </div>
                     <div className='flex gap-1'>
                         <div className='basis-1/2 text-white text-[20px] w-full uppercase min-w-[170px]'>staked</div>

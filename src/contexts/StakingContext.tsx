@@ -3,7 +3,7 @@ import React, { useEffect, useContext, useState, useRef } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { useEthers, ChainId } from "@usedapp/core";
-import { getContract, parseEther, calculateGasMargin, network } from 'src/utils'
+import { getContract, parseEther, calculateGasMargin, network, formatEther } from 'src/utils'
 import { TransactionResponse } from '@ethersproject/providers'
 import { RpcProviders, StakingContractAddress, AppTokenAddress } from "src/constants/AppConstants"
 import useRefresh from 'src/hooks/useRefresh'
@@ -38,6 +38,7 @@ export interface IStakingContext {
     totalStaked: BigNumber
     poolInfo: IPoolInfo
     userInfo: IUserInfo
+    blockTimestamp: number
     depositCallback: (amount: BigNumber) => Promise<any>
     claimCallback: () => Promise<any>
     updateStakingStats: () => void
@@ -49,7 +50,7 @@ const blockchain = 'bsc'
 export const StakingProvider = ({ children = null as any }) => {
     const { account, library } = useEthers()
     const [stfuBalance, setStfuBalance] = useState(BigNumber.from(0))
-    const { slowRefresh } = useRefresh()
+    const { slowRefresh, fastRefresh } = useRefresh()
     const [bnbBalance, setBnbBalance] = useState(BigNumber.from(0))
     const nativeBalance = useNativeTokenBalance('bsc')
     const { nativeBalanceCallback } = useTokenBalanceCallback()
@@ -62,6 +63,7 @@ export const StakingProvider = ({ children = null as any }) => {
     const [totalStaked, setTotalStaked] = useState(BigNumber.from(0))
     const [poolInfo, setPoolInfo] = useState<IPoolInfo>({ lpToken: AppTokenAddress, allocPoint: BigNumber.from(0), lastRewardTimestamp: 0, accTokensPerShare: BigNumber.from(0) })
     const [userInfo, setUserInfo] = useState<IUserInfo>({ amount: BigNumber.from(0), rewardDebt: BigNumber.from(0) })
+    const [blockTimestamp, setBlockTimestamp] = useState(0)
 
     useEffect(() => {
         if (nativeBalance) {
@@ -78,15 +80,24 @@ export const StakingProvider = ({ children = null as any }) => {
     }, [slowRefresh, account])
 
     useEffect(() => {
+        const fetch = async () => {
+            const chainId = getChainIdFromName(blockchain)
+            let blocknumber = await RpcProviders[chainId].getBlockNumber()
+            let blockData = await RpcProviders[chainId].getBlock(blocknumber)
+            setBlockTimestamp(blockData.timestamp)
+        }        
+        fetch()
+    }, [fastRefresh])
+
+    useEffect(() => {
         setPendingReward(BigNumber.from(0))
         setHolderUnlockTime(0)
         setUserInfo({ amount: BigNumber.from(0), rewardDebt: BigNumber.from(0) })
     }, [account])
 
-    const depositCallback = async function (amount: BigNumber) {
-        const chainId = getChainIdFromName(blockchain);
-        if (!account || !library || !StakingContractAddress) return
-        const stakingContract: Contract = getContract(StakingContractAddress, staking_abi, library, account ? account : undefined)
+    const depositCallback = async function (amount: BigNumber) {        
+        if (!account || !library || !StakingContractAddress) return         
+        const stakingContract: Contract = getContract(StakingContractAddress, staking_abi, library, account ? account : undefined)        
         return stakingContract.estimateGas.deposit(amount).then(estimatedGasLimit => {
             const gas = estimatedGasLimit
             return stakingContract.deposit(amount, {
@@ -99,8 +110,7 @@ export const StakingProvider = ({ children = null as any }) => {
         })
     }
 
-    const claimCallback = async function () {
-        const chainId = getChainIdFromName(blockchain);
+    const claimCallback = async function () {        
         if (!account || !library || !StakingContractAddress) return
         const playContract: Contract = getContract(StakingContractAddress, staking_abi, library, account ? account : undefined)
         return playContract.estimateGas.withdraw().then(estimatedGasLimit => {
@@ -161,8 +171,7 @@ export const StakingProvider = ({ children = null as any }) => {
     }
 
     const updateStakingStats = async () => {        
-        const chainId = getChainIdFromName(blockchain);
-        console.log(network, blockchain, chainId, RpcProviders[chainId], account)
+        const chainId = getChainIdFromName(blockchain);        
         const stakingContract: Contract = getContract(StakingContractAddress, staking_abi, RpcProviders[chainId], account ? account : undefined)
         fetchApy(stakingContract).then(async (result: any) => {            
             setApy(Number(result))
@@ -182,6 +191,7 @@ export const StakingProvider = ({ children = null as any }) => {
 
         fetchPendingReward(stakingContract).then(result => {
             setPendingReward(result)
+            console.log(result, formatEther(result, 18, 2, false))
         }).catch(error => { console.log(error) })
 
         fetchRewardsRemaining(stakingContract).then(result => {
@@ -227,6 +237,7 @@ export const StakingProvider = ({ children = null as any }) => {
                 totalStaked,
                 poolInfo,
                 userInfo,
+                blockTimestamp,
                 depositCallback,
                 claimCallback,
                 updateStakingStats,
