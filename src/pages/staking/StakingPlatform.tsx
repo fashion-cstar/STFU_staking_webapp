@@ -102,7 +102,7 @@ export const StakingPlatform = () => {
                             <span className='text-white text-[12px] uppercase'>0x4fg...cas</span>
                         </div>
                         <div className='flex justify-between md:px-10 items-stretch'>
-                            <div className='w-full' style={{ border: isBorder ? "1px solid black" : "none" }} >
+                            <div className='w-full' style={{ border: isBorder ? "1px solid black" : "1px solid white" }} >
                                 <SubmitTextInput handleFocus={handleFocus}
                                     handleBlur={handleBlur}
                                     onChange={onChange} />
