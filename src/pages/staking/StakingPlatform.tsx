@@ -48,7 +48,7 @@ export const StakingPlatform = () => {
             claimCallback().then((res: any) => {
                 if (res.status === 1) {
                     toast.success("Success! You've claimed your rewards!")
-                    updateStakingStats()                    
+                    updateStakingStats()
                 } else {
                     toast.error(`Transaction reverted! Tx:${res.hash}`)
                 }
@@ -117,11 +117,11 @@ export const StakingPlatform = () => {
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>Last time reward</span>
-                            <span className='text-white text-[12px] uppercase'>{poolInfo ? poolInfo.lastRewardTimestamp > 0 ? getShortDateTimeWithoutSeconds_(new Date(poolInfo.lastRewardTimestamp)) : '' : ''}</span>
+                            <span className='text-white text-[12px] uppercase'>{poolInfo ? poolInfo.lastRewardTimestamp > 0 ? getShortDateTimeWithoutSeconds_(new Date(poolInfo.lastRewardTimestamp * 1000)) : '' : ''}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>Next Unlocked Date</span>
-                            <span className='text-white text-[12px] uppercase'>{holderUnlockTime > 0 ? getShortDateTimeWithoutSeconds_(new Date(holderUnlockTime)) : ''}</span>
+                            <span className='text-white text-[12px] uppercase'>{holderUnlockTime > 0 ? getShortDateTimeWithoutSeconds_(new Date(holderUnlockTime * 1000)) : ''}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>staked tokens</span>

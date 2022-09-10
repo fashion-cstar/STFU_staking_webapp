@@ -164,8 +164,7 @@ export const StakingProvider = ({ children = null as any }) => {
         const chainId = getChainIdFromName(blockchain);
         console.log(network, blockchain, chainId, RpcProviders[chainId], account)
         const stakingContract: Contract = getContract(StakingContractAddress, staking_abi, RpcProviders[chainId], account ? account : undefined)
-        fetchApy(stakingContract).then(async (result: any) => {
-            console.log(result)
+        fetchApy(stakingContract).then(async (result: any) => {            
             setApy(Number(result))
         }).catch(error => { console.log(error) })
 
@@ -193,7 +192,7 @@ export const StakingProvider = ({ children = null as any }) => {
             setTotalStaked(result)
         }).catch(error => { console.log(error) })
 
-        fetchPoolInfo(stakingContract).then(result => {
+        fetchPoolInfo(stakingContract).then(result => {            
             setPoolInfo({ lpToken: result?.lpToken, allocPoint: result?.allocPoint, lastRewardTimestamp: Number(result?.lastRewardTimestamp), accTokensPerShare: result?.accTokensPerShare })
         }).catch(error => { console.log(error) })
 
