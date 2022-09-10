@@ -7,13 +7,16 @@ import { AppTokenAddress, BUY_STFU_URL, StakingContractAddress } from "src/const
 import DepositModal from "./DepositModal"
 import { formatEther, getShortDateTimeWithoutSeconds_, shortenAddress } from "src/utils"
 import { useStaking } from 'src/contexts'
+import LoadingButton from "@mui/lab/LoadingButton"
+import { toast } from "react-toastify"
 
 export const StakingPlatform = () => {
     const { account } = useEthers()
     const [isOpenDeposit, setIsOpenDeposit] = useState(false)
     const [isBorder, setIsBorder] = useState(false)
     const [submitText, setSubmitText] = useState('')
-    const { newRewards, poolInfo, totalStaked, holderUnlockTime } = useStaking()
+    const { newRewards, poolInfo, totalStaked, holderUnlockTime, pendingReward, claimCallback, updateStakingStats } = useStaking()
+    const [isClaiming, setIsClaiming] = useState(false)
 
     const handleFocus = () => {
         setIsBorder(true)
@@ -37,6 +40,30 @@ export const StakingPlatform = () => {
 
     const onDeposit = () => {
         setIsOpenDeposit(true)
+    }
+
+    const onClaim = () => {
+        setIsClaiming(true)
+        try {
+            claimCallback().then((res: any) => {
+                if (res.status === 1) {
+                    toast.success("Success! You've claimed your rewards!")
+                    updateStakingStats()                    
+                } else {
+                    toast.error(`Transaction reverted! Tx:${res.hash}`)
+                }
+                setIsClaiming(false)
+            }).catch(error => {
+                setIsClaiming(false)
+                console.log(error)
+                let err: any = error
+                toast.error((err.data?.message || err?.message || err).toString())
+            })
+        } catch (error) {
+            setIsClaiming(false)
+            console.log(error)
+        }
+        return null;
     }
 
     return (
@@ -90,11 +117,11 @@ export const StakingPlatform = () => {
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>Last time reward</span>
-                            <span className='text-white text-[12px] uppercase'>{poolInfo?poolInfo.lastRewardTimestamp>0?getShortDateTimeWithoutSeconds_(new Date(poolInfo.lastRewardTimestamp)):'':''}</span>
+                            <span className='text-white text-[12px] uppercase'>{poolInfo ? poolInfo.lastRewardTimestamp > 0 ? getShortDateTimeWithoutSeconds_(new Date(poolInfo.lastRewardTimestamp)) : '' : ''}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>Next Unlocked Date</span>
-                            <span className='text-white text-[12px] uppercase'>{holderUnlockTime>0?getShortDateTimeWithoutSeconds_(new Date(holderUnlockTime)):''}</span>
+                            <span className='text-white text-[12px] uppercase'>{holderUnlockTime > 0 ? getShortDateTimeWithoutSeconds_(new Date(holderUnlockTime)) : ''}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>staked tokens</span>
@@ -117,6 +144,19 @@ export const StakingPlatform = () => {
                             <div className='cursor-pointer bg-black text-white text-[12px] w-[100px] uppercase hover:bg-[#101010] flex justify-center items-center' onClick={onSubmit}>
                                 Submit
                             </div>
+                        </div>
+                        <div className='w-full flex justify-center'>
+                            <LoadingButton
+                                variant="outlined"
+                                sx={{ border: "3px solid #7F41E4", width: '280px', height: '48px', fontFamily: 'agressive' }}
+                                loading={isClaiming}
+                                loadingPosition="start"
+                                color="primary"
+                                onClick={onClaim}
+                                disabled={isClaiming || !account || pendingReward.lte(0)}
+                            >
+                                <span className='text-[20px] text-black'>{isClaiming ? 'Claiming ...' : "Claim Rewards"}</span>
+                            </LoadingButton>
                         </div>
                     </div>
                     <div className='hidden md:flex w-[200px] pb-4 flex-col gap-1 absolute bottom-0 right-0'>
