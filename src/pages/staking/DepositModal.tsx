@@ -41,7 +41,7 @@ export default function DepositModal({ isOpen, handleClose }: ModalProps) {
     const [isApproved, setIsApproved] = useState(false)
     const [isCheckingAllowance, setIsCheckingAllowance] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const { depositCallback, claimCallback, updateStakingStats, } = useStaking()
+    const { depositCallback, updateStakingStats, bnbBalance, stfuBalance} = useStaking()
     const [hash, setHash] = useState('')
 
     const init = () => {
@@ -52,6 +52,8 @@ export default function DepositModal({ isOpen, handleClose }: ModalProps) {
         setIsCheckingAllowance(false)
         setIsBorder(false)
         setBgColor('#7F41E4')
+        setAmount(BigNumber.from(0))
+        initInputBox()
     }
 
     const checkUserApproved = useRef(
@@ -124,6 +126,7 @@ export default function DepositModal({ isOpen, handleClose }: ModalProps) {
             depositCallback(amount).then((res: any) => {
                 if (res.status === 1) {
                     setHash(res.hash)
+                    updateStakingStats()
                     setBgColor('#6FFF39')
                 } else {
                     toast.error(`Transaction reverted! Tx:${res.hash}`)
@@ -210,30 +213,31 @@ export default function DepositModal({ isOpen, handleClose }: ModalProps) {
                                     <hr className="w-full mt-3 sm:mt-4" style={{ borderTop: "2px solid #6FFF39" }} />
                                     <div className='mt-4 w-full flex flex-col justify-center items-center'>
                                         <span className='text-[12px] text-white uppercase'>BNB Balance:</span>
-                                        <span className='text-[12px] text-[#6FFF39] uppercase'>{ }{' '}BNB</span>
+                                        <span className='text-[12px] text-[#6FFF39] uppercase'>{formatEther(bnbBalance, 18, 3, true)}{' '}BNB</span>
                                     </div>
                                     <div className='w-full flex flex-col justify-center items-center'>
                                         <span className='text-[12px] text-white uppercase'>STFU Balance:</span>
-                                        <span className='text-[12px] text-[#6FFF39] uppercase'>{ }{' '}STFU</span>
+                                        <span className='text-[12px] text-[#6FFF39] uppercase'>{formatEther(stfuBalance, 18, 3, true)}{' '}STFU</span>
+                                        <span className='text-[12px] text-[#FF8839] uppercase'>{amount.gt(stfuBalance)?'Insufficient STFU balance':''}</span>
                                     </div>
                                     <div className='mt-8 mb-6 w-full flex flex-col items-center gap-2'>                                        
                                         <LoadingButton
                                             variant="outlined"
-                                            sx={{ border: "3px solid #6FFF39", width: '175px', height: '48px', fontFamily: 'agressive' }}
+                                            sx={{ border: "3px solid #6FFF39", minWidth: '190px', height: '48px', fontFamily: 'agressive' }}
                                             loading={isWalletApproving}
                                             loadingPosition="start"
                                             color="primary"
                                             onClick={onApprove}
-                                            disabled={isApproved || isCheckingAllowance || amount.lte(0) || !account}
+                                            disabled={isApproved || isCheckingAllowance || amount.lte(0) || amount.gt(stfuBalance) || !account}
                                         >
                                             <span className='text-[20px] text-white'>{isWalletApproving ? 'Approving ...' : isApproved ? "Approved" : "Approve"}</span>
                                         </LoadingButton>                                        
                                         <Button
                                             variant="contained"
-                                            sx={{ width: "175px", height: '50px', fontFamily: 'agressive' }}
+                                            sx={{ minWidth: "190px", height: '50px', fontFamily: 'agressive' }}
                                             color="primary"
                                             onClick={onDeposit}
-                                            disabled={!isApproved || amount.lte(0) || !account}
+                                            disabled={!isApproved || amount.lte(0) || amount.gt(stfuBalance) || !account}
                                         >
                                             <span className='text-[20px] text-[#000000]'>Deposit</span>
                                         </Button>                                        

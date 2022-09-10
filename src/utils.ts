@@ -7,6 +7,8 @@ import { getAddress } from '@ethersproject/address'
 import { ChainId } from "@usedapp/core";
 import { RpcProviders } from 'src/constants/AppConstants'
 
+export const network = 'mainnet'
+
 enum NETWORK_NAME {
     Ethereum = 'ethereum',
     BSC = 'bsc',
@@ -129,20 +131,20 @@ export const getChainIdFromName = (name: string): number => {
     let chainId = 1
     switch (name.toLowerCase()) {
         case NETWORK_NAME.Ethereum:
-            if (process.env.network === 'mainnet') chainId = 1; //ethereum mainnet
-            else if (process.env.network === 'testnet') chainId = 4; //ethereum rinkeby
+            if (network === 'mainnet') chainId = 1; //ethereum mainnet
+            else if (network === 'testnet') chainId = 4; //ethereum rinkeby
             break;
         case NETWORK_NAME.BSC:
-            if (process.env.network === 'mainnet') chainId = 56; //bsc mainnet
-            else if (process.env.network === 'testnet') chainId = 97; //bsc testnet            
+            if (network === 'mainnet') chainId = 56; //bsc mainnet
+            else if (network === 'testnet') chainId = 97; //bsc testnet            
             break;
         case NETWORK_NAME.Polygon:
-            if (process.env.network === 'mainnet') chainId = 137; //polygon mainnet
-            else if (process.env.network === 'testnet') chainId = 80001; //mumbai testnet            
+            if (network === 'mainnet') chainId = 137; //polygon mainnet
+            else if (network === 'testnet') chainId = 80001; //mumbai testnet            
             break;
         default:
-            if (process.env.network === 'mainnet') chainId = 56; //bsc mainnet
-            else if (process.env.network === 'testnet') chainId = 97; //bsc testnet            
+            if (network === 'mainnet') chainId = 56; //bsc mainnet
+            else if (network === 'testnet') chainId = 97; //bsc testnet            
     }
     return chainId
 }
@@ -205,9 +207,10 @@ export const getShortDateTime = (d: Date): string => {
     // return res.split('T')[0] + '  ' + res.split('T')[1]
 }
 
+
 export const getShortDateTimeWithoutSeconds_ = (d: Date): string => {
     let y = d.getFullYear()
-    let m = d.getMonth().toString().padStart(2, '0')
+    let m = (d.getMonth() + 1).toString().padStart(2, '0')
     let date = d.getDate().toString().padStart(2, '0')
     let h = d.getHours().toString().padStart(2, '0')
     let min = d.getMinutes().toString().padStart(2, '0')
@@ -216,7 +219,7 @@ export const getShortDateTimeWithoutSeconds_ = (d: Date): string => {
 
 export const getShortDateTimeWithoutSeconds_yy = (d: Date): string => {
     let y = d.getFullYear().toString().substring(2)
-    let m = d.getMonth().toString().padStart(2, '0')
+    let m = (d.getMonth() + 1).toString().padStart(2, '0')
     let date = d.getDate().toString().padStart(2, '0')
     let h = d.getHours().toString().padStart(2, '0')
     let min = d.getMinutes().toString().padStart(2, '0')
@@ -225,7 +228,7 @@ export const getShortDateTimeWithoutSeconds_yy = (d: Date): string => {
 
 export const getShortDateTime_ = (d: Date): string => {
     let y = d.getFullYear()
-    let m = d.getMonth().toString().padStart(2, '0')
+    let m = (d.getMonth() + 1).toString().padStart(2, '0')
     let date = d.getDate().toString().padStart(2, '0')
     let h = d.getHours().toString().padStart(2, '0')
     let min = d.getMinutes().toString().padStart(2, '0')

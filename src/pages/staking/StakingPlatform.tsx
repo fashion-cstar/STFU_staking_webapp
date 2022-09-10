@@ -3,14 +3,17 @@ import { Web3ModalButton } from "src/common/WalletConnect/Web3Modal"
 import { useEthers } from '@usedapp/core'
 import SubmitTextInput from "src/common/SubmitTextInput"
 import { useState } from "react"
-import { BUY_STFU_URL } from "src/constants/AppConstants"
+import { AppTokenAddress, BUY_STFU_URL, StakingContractAddress } from "src/constants/AppConstants"
 import DepositModal from "./DepositModal"
+import { formatEther, getShortDateTimeWithoutSeconds_, shortenAddress } from "src/utils"
+import { useStaking } from 'src/contexts'
 
 export const StakingPlatform = () => {
     const { account } = useEthers()
     const [isOpenDeposit, setIsOpenDeposit] = useState(false)
     const [isBorder, setIsBorder] = useState(false)
     const [submitText, setSubmitText] = useState('')
+    const { newRewards, poolInfo, totalStaked, holderUnlockTime } = useStaking()
 
     const handleFocus = () => {
         setIsBorder(true)
@@ -78,28 +81,32 @@ export const StakingPlatform = () => {
                     </div>
                     <div className='w-full border border-b border-[#000000] mb-2' />
                 </div>
-                <div className='w-full flex flex-col gap-4' style={{paddingBottom: '48px'}}>
+                <div className='w-full flex flex-col gap-4' style={{ paddingBottom: '48px' }}>
                     <div className='w-full mt-8 text-center text-black text-[18px] md:text-[20px] uppercase'>Staking Information</div>
                     <div className='w-full bg-[#6FFF39] flex py-4 px-4 md:px-8 mb-12 flex-col gap-4'>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>Total pending rewards</span>
-                            <span className='text-white text-[12px] uppercase'>$2341234133</span>
+                            <span className='text-white text-[12px] uppercase'>{formatEther(newRewards, 18, 2, true)}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>Last time reward</span>
-                            <span className='text-white text-[12px] uppercase'>3hrs ago</span>
+                            <span className='text-white text-[12px] uppercase'>{poolInfo?poolInfo.lastRewardTimestamp>0?getShortDateTimeWithoutSeconds_(new Date(poolInfo.lastRewardTimestamp)):'':''}</span>
+                        </div>
+                        <div className='flex justify-between md:px-10'>
+                            <span className='text-black text-[12px] uppercase'>Next Unlocked Date</span>
+                            <span className='text-white text-[12px] uppercase'>{holderUnlockTime>0?getShortDateTimeWithoutSeconds_(new Date(holderUnlockTime)):''}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>staked tokens</span>
-                            <span className='text-white text-[12px] uppercase'>12.345.678</span>
+                            <span className='text-white text-[12px] uppercase'>{formatEther(totalStaked, 18, 2, true)}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>token contract</span>
-                            <span className='text-white text-[12px] uppercase'>0x123...fca</span>
+                            <span className='text-white text-[12px] uppercase'>{shortenAddress(AppTokenAddress, 3)}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>staking contract</span>
-                            <span className='text-white text-[12px] uppercase'>0x4fg...cas</span>
+                            <span className='text-white text-[12px] uppercase'>{shortenAddress(StakingContractAddress, 3)}</span>
                         </div>
                         <div className='flex justify-between md:px-10 items-stretch'>
                             <div className='w-full' style={{ border: isBorder ? "1px solid black" : "1px solid white" }} >
@@ -111,7 +118,7 @@ export const StakingPlatform = () => {
                                 Submit
                             </div>
                         </div>
-                    </div>          
+                    </div>
                     <div className='hidden md:flex w-[200px] pb-4 flex-col gap-1 absolute bottom-0 right-0'>
                         <div className='h-2 w-full bg-black' />
                         <div className='h-2 w-full bg-black' />

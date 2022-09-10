@@ -3,7 +3,7 @@ import React, { useEffect, useContext, useState, useRef } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { useEthers, ChainId } from "@usedapp/core";
-import { getContract, parseEther, calculateGasMargin } from 'src/utils'
+import { getContract, parseEther, calculateGasMargin, network } from 'src/utils'
 import { TransactionResponse } from '@ethersproject/providers'
 import { RpcProviders, StakingContractAddress, AppTokenAddress } from "src/constants/AppConstants"
 import useRefresh from 'src/hooks/useRefresh'
@@ -33,7 +33,7 @@ export interface IStakingContext {
     newRewards: BigNumber
     holderUnlockTime: number
     lockDuration: number
-    pendingRewards: BigNumber
+    pendingReward: BigNumber
     rewardsRemaining: BigNumber
     totalStaked: BigNumber
     poolInfo: IPoolInfo
@@ -57,7 +57,7 @@ export const StakingProvider = ({ children = null as any }) => {
     const [newRewards, setNewRewards] = useState(BigNumber.from(0))
     const [holderUnlockTime, setHolderUnlockTime] = useState(0)
     const [lockDuration, setLockDuration] = useState(0)
-    const [pendingRewards, setPendingReward] = useState(BigNumber.from(0))
+    const [pendingReward, setPendingReward] = useState(BigNumber.from(0))
     const [rewardsRemaining, setRewardsRemaining] = useState(BigNumber.from(0))
     const [totalStaked, setTotalStaked] = useState(BigNumber.from(0))
     const [poolInfo, setPoolInfo] = useState<IPoolInfo>({ lpToken: AppTokenAddress, allocPoint: BigNumber.from(0), lastRewardTimestamp: 0, accTokensPerShare: BigNumber.from(0) })
@@ -160,42 +160,44 @@ export const StakingProvider = ({ children = null as any }) => {
         return res
     }
 
-    const updateStakingStats = async () => {
+    const updateStakingStats = async () => {        
         const chainId = getChainIdFromName(blockchain);
-        const playContract: Contract = getContract(StakingContractAddress, staking_abi, RpcProviders[chainId], account ? account : undefined)
-        fetchApy(playContract).then(async (result: any) => {
+        console.log(network, blockchain, chainId, RpcProviders[chainId], account)
+        const stakingContract: Contract = getContract(StakingContractAddress, staking_abi, RpcProviders[chainId], account ? account : undefined)
+        fetchApy(stakingContract).then(async (result: any) => {
+            console.log(result)
             setApy(Number(result))
         }).catch(error => { console.log(error) })
 
-        fetchCalculateNewRewards(playContract).then(result => {
+        fetchCalculateNewRewards(stakingContract).then(result => {
             setNewRewards(result)
         }).catch(error => { console.log(error) })
 
-        fetchHolderUnlockTime(playContract).then(result => {
+        fetchHolderUnlockTime(stakingContract).then(result => {
             setHolderUnlockTime(Number(result))
         }).catch(error => { console.log(error) })
 
-        fetchLockDuration(playContract).then(result => {
+        fetchLockDuration(stakingContract).then(result => {
             setLockDuration(Number(result))
         }).catch(error => { console.log(error) })
 
-        fetchPendingReward(playContract).then(result => {
+        fetchPendingReward(stakingContract).then(result => {
             setPendingReward(result)
         }).catch(error => { console.log(error) })
 
-        fetchRewardsRemaining(playContract).then(result => {
+        fetchRewardsRemaining(stakingContract).then(result => {
             setRewardsRemaining(result)
         }).catch(error => { console.log(error) })
 
-        fetchTotalStaked(playContract).then(result => {
+        fetchTotalStaked(stakingContract).then(result => {
             setTotalStaked(result)
         }).catch(error => { console.log(error) })
 
-        fetchPoolInfo(playContract).then(result => {
+        fetchPoolInfo(stakingContract).then(result => {
             setPoolInfo({ lpToken: result?.lpToken, allocPoint: result?.allocPoint, lastRewardTimestamp: Number(result?.lastRewardTimestamp), accTokensPerShare: result?.accTokensPerShare })
         }).catch(error => { console.log(error) })
 
-        fetchUserInfo(playContract).then(result => {
+        fetchUserInfo(stakingContract).then(result => {
             setUserInfo({ amount: result?.amount, rewardDebt: result?.rewardDebt })
         }).catch(error => { console.log(error) })
 
@@ -221,7 +223,7 @@ export const StakingProvider = ({ children = null as any }) => {
                 newRewards,
                 holderUnlockTime,
                 lockDuration,
-                pendingRewards,
+                pendingReward,
                 rewardsRemaining,
                 totalStaked,
                 poolInfo,

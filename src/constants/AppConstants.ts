@@ -57,7 +57,9 @@ export const RpcProviders: { [chainId in ChainId]?: JsonRpcProvider } = {
     [ChainId.BSCTestnet]: new ethers.providers.JsonRpcProvider(Rpc_URLS[ChainId.BSCTestnet])
 }
 
-export const AppTokenAddress = "0x4bf5cd1AC6FfF12E88AEDD3c70EB4148F90F8894"
-export const StakingContractAddress = "0x517cd2967ce02deee007b98323b43b6df8087f86"
+export const AppTokenAddress = "0x06b0e37F89faeF0BA9B3083a1adb4Bc4893997F6"
+export const StakingContractAddress = "0x0980e91480268Bb5BB740A8C300573F534216c05"
 
 export const BUY_STFU_URL = 'https://pancakeswap.finance/swap?outputCurrency=' + AppTokenAddress
+
+export const PCS_API_ENDPOINTS = process.env.PCS_API_ENDPOINTS || "https://api.pancakeswap.info"
