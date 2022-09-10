@@ -78,9 +78,9 @@ export const StakingPlatform = () => {
                     </div>
                     <div className='w-full border border-b border-[#000000] mb-2' />
                 </div>
-                <div className='w-full flex flex-col gap-4'>
+                <div className='w-full flex flex-col gap-4' style={{paddingBottom: '48px'}}>
                     <div className='w-full mt-8 text-center text-black text-[18px] md:text-[20px] uppercase'>Staking Information</div>
-                    <div className='w-full bg-[#6FFF39] flex py-4 px-4 md:px-8 flex-col gap-4'>
+                    <div className='w-full bg-[#6FFF39] flex py-4 px-4 md:px-8 mb-12 flex-col gap-4'>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>Total pending rewards</span>
                             <span className='text-white text-[12px] uppercase'>$2341234133</span>
@@ -111,28 +111,7 @@ export const StakingPlatform = () => {
                                 Submit
                             </div>
                         </div>
-                    </div>
-                    <div className='w-full mt-4 text-center text-black text-[18px] md:text-[20px] uppercase'>timeline</div>
-                    <div className='w-full flex flex-col mb-[50px]'>
-                        <div className='w-full bg-black text-white text-[12px] flex h-[50px]'>
-                            <div className='basis-1/5 flex justify-center items-center uppercase'>column</div>
-                            <div className='basis-1/5 flex justify-center items-center uppercase'>column</div>
-                            <div className='basis-1/5 flex justify-center items-center uppercase'>column</div>
-                            <div className='basis-1/5 flex justify-center items-center uppercase'>column</div>
-                            <div className='basis-1/5 flex justify-center items-center uppercase'>column</div>
-                        </div>
-                        {[1, 2, 3].map((item) => {
-                            return (
-                                <div className='w-full bg-white text-black text-[12px] flex h-[50px]'>
-                                    <div className='basis-1/5 flex justify-center items-center uppercase'>row</div>
-                                    <div className='basis-1/5 flex justify-center items-center uppercase'>data</div>
-                                    <div className='basis-1/5 flex justify-center items-center uppercase'>data</div>
-                                    <div className='basis-1/5 flex justify-center items-center uppercase'>data</div>
-                                    <div className='basis-1/5 flex justify-center items-center uppercase'>data</div>
-                                </div>
-                            )
-                        })}
-                    </div>
+                    </div>          
                     <div className='hidden md:flex w-[200px] pb-4 flex-col gap-1 absolute bottom-0 right-0'>
                         <div className='h-2 w-full bg-black' />
                         <div className='h-2 w-full bg-black' />

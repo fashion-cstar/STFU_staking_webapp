@@ -6,11 +6,6 @@ interface PopupProps {
     handleClose: () => void
 }
 
-const contentModalStyle = {    
-    overflow: 'auto',
-    maxHeight: 'calc(100vh - 125px)'
-}
-
 export default function Modal({
     isOpen,    
     children,
@@ -34,7 +29,7 @@ export default function Modal({
             onClick={(e) => handleWindowClick(e)}
         >
             <div className="px-4 w-full w-auto h-auto mt-8">
-                <div className={`p-3 rounded-2xl shadow`} style={{backgroundColor: bgColor??'#111111'}}>                    
+                <div className={`drop-shadow-2xl shadow]`} style={{backgroundColor: bgColor??'#111111', border: '4px solid black'}}>                    
                     {children}
                 </div>
             </div>

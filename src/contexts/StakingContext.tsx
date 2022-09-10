@@ -46,7 +46,7 @@ export interface IStakingContext {
 const StakingContext = React.createContext<Maybe<IStakingContext>>(null)
 const blockchain = 'bsc'
 
-export const PlayProvider = ({ children = null as any }) => {
+export const StakingProvider = ({ children = null as any }) => {
     const { account, library } = useEthers()
     const [stfuBalance, setStfuBalance] = useState(BigNumber.from(0))
     const { slowRefresh } = useRefresh()
@@ -77,6 +77,12 @@ export const PlayProvider = ({ children = null as any }) => {
         // }
     }, [slowRefresh, account])
 
+    useEffect(() => {
+        setPendingReward(BigNumber.from(0))
+        setHolderUnlockTime(0)
+        setUserInfo({ amount: BigNumber.from(0), rewardDebt: BigNumber.from(0) })
+    }, [account])
+
     const depositCallback = async function (amount: BigNumber) {
         const chainId = getChainIdFromName(blockchain);
         if (!account || !library || !StakingContractAddress) return
@@ -87,7 +93,7 @@ export const PlayProvider = ({ children = null as any }) => {
                 gasLimit: calculateGasMargin(gas)
             }).then((response: TransactionResponse) => {
                 return response.wait().then((res: any) => {
-                    return res
+                    return { status: res.status, hash: response.hash }
                 })
             })
         })
@@ -103,7 +109,7 @@ export const PlayProvider = ({ children = null as any }) => {
                 gasLimit: calculateGasMargin(gas)
             }).then((response: TransactionResponse) => {
                 return response.wait().then((res: any) => {
-                    return res
+                    return { status: res.status, hash: response.hash }
                 })
             })
         })
