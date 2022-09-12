@@ -113,37 +113,27 @@ export const StakingPlatform = () => {
                     <div className='w-full bg-[#6FFF39] flex py-4 px-4 md:px-8 mb-12 flex-col gap-4'>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>Total pending rewards</span>
-                            <span className='text-white text-[12px] uppercase'>{formatEther(newRewards, 18, 4, true)}</span>
+                            <span className='text-white text-[12px] uppercase text-right'>{formatEther(newRewards, 18, 4, true)}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>Last time reward</span>
-                            <span className='text-white text-[12px] uppercase'>{poolInfo ? poolInfo.lastRewardTimestamp > 0 ? getShortDateTimeWithoutSeconds_(new Date(poolInfo.lastRewardTimestamp * 1000)) : '' : ''}</span>
+                            <span className='text-white text-[12px] uppercase text-right'>{poolInfo ? poolInfo.lastRewardTimestamp > 0 ? getShortDateTimeWithoutSeconds_(new Date(poolInfo.lastRewardTimestamp * 1000)) : '' : ''}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>Next Unlocked Date</span>
-                            <span className='text-white text-[12px] uppercase'>{holderUnlockTime > 0 ? getShortDateTimeWithoutSeconds_(new Date(holderUnlockTime * 1000)) : ''}</span>
+                            <span className='text-white text-[12px] uppercase text-right'>{holderUnlockTime > 0 ? getShortDateTimeWithoutSeconds_(new Date(holderUnlockTime * 1000)) : ''}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>staked tokens</span>
-                            <span className='text-white text-[12px] uppercase'>{formatEther(totalStaked, 18, 2, true)}</span>
+                            <span className='text-white text-[12px] uppercase text-right'>{formatEther(totalStaked, 18, 2, true)}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>token contract</span>
-                            <span className='text-white text-[12px] uppercase'>{shortenAddress(AppTokenAddress, 3)}</span>
+                            <span className='text-white text-[12px] uppercase text-right'>{shortenAddress(AppTokenAddress, 3)}</span>
                         </div>
                         <div className='flex justify-between md:px-10'>
                             <span className='text-black text-[12px] uppercase'>staking contract</span>
-                            <span className='text-white text-[12px] uppercase'>{shortenAddress(StakingContractAddress, 3)}</span>
-                        </div>
-                        <div className='flex justify-between md:px-10 items-stretch'>
-                            <div className='w-full' style={{ border: isBorder ? "1px solid black" : "1px solid white" }} >
-                                <SubmitTextInput handleFocus={handleFocus}
-                                    handleBlur={handleBlur}
-                                    onChange={onChange} />
-                            </div>
-                            <div className='cursor-pointer bg-black text-white text-[12px] w-[100px] uppercase hover:bg-[#101010] flex justify-center items-center' onClick={onSubmit}>
-                                Submit
-                            </div>
+                            <span className='text-white text-[12px] uppercase text-right'>{shortenAddress(StakingContractAddress, 3)}</span>
                         </div>
                         <div className='w-full flex justify-center'>
                             <LoadingButton
