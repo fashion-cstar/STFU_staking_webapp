@@ -5,7 +5,7 @@ export enum SidebarItem {
 
 export const SIDEBAR_ROUTES: { [key: string]: string } = {
   [SidebarItem.STAKING]: "/staking",
-  [SidebarItem.HOME]: "/home"
+  [SidebarItem.HOME]: "/stfulabs.com/"
 };
 
 export const SIDEBAR_ITEMS: { [key: string]: string } = {
