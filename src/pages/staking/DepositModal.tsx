@@ -96,7 +96,7 @@ export default function DepositModal({ isOpen, handleClose }: ModalProps) {
 
     const onApprove = async () => {
         setIsWalletApproving(true)
-        let res = await checkAllowance()
+        let res = await checkAllowance()        
         if (!res) {
             try {
                 await approveCallback(StakingContractAddress, AppTokenAddress, maxStakingAmount, 'bsc').then((hash: string) => {
@@ -114,7 +114,8 @@ export default function DepositModal({ isOpen, handleClose }: ModalProps) {
                 setIsWalletApproving(false)
             }
         } else {
-            toast.success('Approved!')
+            toast.success('Approved!')            
+            setIsWalletApproving(false)
             setIsApproved(true)
         }
         return null;

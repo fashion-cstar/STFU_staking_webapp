@@ -86,7 +86,7 @@ export const StakingProvider = ({ children = null as any }) => {
             let blocknumber = await RpcProviders[chainId].getBlockNumber()
             let blockData = await RpcProviders[chainId].getBlock(blocknumber)
             setBlockTimestamp(blockData.timestamp)
-        }        
+        }
         fetch()
     }, [fastRefresh])
 
@@ -96,9 +96,9 @@ export const StakingProvider = ({ children = null as any }) => {
         setUserInfo({ amount: BigNumber.from(0), rewardDebt: BigNumber.from(0) })
     }, [account])
 
-    const depositCallback = async function (amount: BigNumber) {        
-        if (!account || !library || !StakingContractAddress) return         
-        const stakingContract: Contract = getContract(StakingContractAddress, staking_abi, library, account ? account : undefined)        
+    const depositCallback = async function (amount: BigNumber) {
+        if (!account || !library || !StakingContractAddress) return
+        const stakingContract: Contract = getContract(StakingContractAddress, staking_abi, library, account ? account : undefined)
         return stakingContract.estimateGas.deposit(amount).then(estimatedGasLimit => {
             const gas = estimatedGasLimit
             return stakingContract.deposit(amount, {
@@ -111,7 +111,7 @@ export const StakingProvider = ({ children = null as any }) => {
         })
     }
 
-    const claimCallback = async function () {        
+    const claimCallback = async function () {
         if (!account || !library || !StakingContractAddress) return
         const playContract: Contract = getContract(StakingContractAddress, staking_abi, library, account ? account : undefined)
         return playContract.estimateGas.withdraw().then(estimatedGasLimit => {
@@ -126,7 +126,7 @@ export const StakingProvider = ({ children = null as any }) => {
         })
     }
 
-    const unstakeCallback = async function () {        
+    const unstakeCallback = async function () {
         if (!account || !library || !StakingContractAddress) return
         const playContract: Contract = getContract(StakingContractAddress, staking_abi, library, account ? account : undefined)
         return playContract.estimateGas.emergencyWithdraw().then(estimatedGasLimit => {
@@ -186,44 +186,45 @@ export const StakingProvider = ({ children = null as any }) => {
         return res
     }
 
-    const updateStakingStats = async () => {        
-        const chainId = getChainIdFromName(blockchain);        
+    const updateStakingStats = async () => {
+        const chainId = getChainIdFromName(blockchain);
         const stakingContract: Contract = getContract(StakingContractAddress, staking_abi, RpcProviders[chainId], account ? account : undefined)
-        fetchApy(stakingContract).then(async (result: any) => {            
+        fetchApy(stakingContract).then(async (result: any) => {
             setApy(Number(result))
         }).catch(error => { console.log(error) })
 
         fetchCalculateNewRewards(stakingContract).then(result => {
             setNewRewards(result)
         }).catch(error => { console.log(error) })
+        
+        if (account) {
+            fetchHolderUnlockTime(stakingContract).then(result => {
+                setHolderUnlockTime(Number(result))
+            }).catch(error => { console.log(error) })
 
-        fetchHolderUnlockTime(stakingContract).then(result => {
-            setHolderUnlockTime(Number(result))
-        }).catch(error => { console.log(error) })
+            fetchPendingReward(stakingContract).then(result => {
+                setPendingReward(result)
+            }).catch(error => { console.log(error) })
 
+            fetchUserInfo(stakingContract).then(result => {
+                setUserInfo({ amount: result?.amount, rewardDebt: result?.rewardDebt })
+            }).catch(error => { console.log(error) })
+        }
+        
         fetchLockDuration(stakingContract).then(result => {
             setLockDuration(Number(result))
         }).catch(error => { console.log(error) })
-
-        fetchPendingReward(stakingContract).then(result => {
-            setPendingReward(result)
-            console.log(result, formatEther(result, 18, 2, false))
-        }).catch(error => { console.log(error) })
-
+        
         fetchRewardsRemaining(stakingContract).then(result => {
             setRewardsRemaining(result)
-        }).catch(error => { console.log(error) })
+        }).catch(error => { console.log(error) })        
 
         fetchTotalStaked(stakingContract).then(result => {
             setTotalStaked(result)
         }).catch(error => { console.log(error) })
 
-        fetchPoolInfo(stakingContract).then(result => {            
+        fetchPoolInfo(stakingContract).then(result => {
             setPoolInfo({ lpToken: result?.lpToken, allocPoint: result?.allocPoint, lastRewardTimestamp: Number(result?.lastRewardTimestamp), accTokensPerShare: result?.accTokensPerShare })
-        }).catch(error => { console.log(error) })
-
-        fetchUserInfo(stakingContract).then(result => {
-            setUserInfo({ amount: result?.amount, rewardDebt: result?.rewardDebt })
         }).catch(error => { console.log(error) })
 
         if (account) {
