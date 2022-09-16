@@ -15,8 +15,9 @@ export const StakingPlatform = () => {
     const [isOpenDeposit, setIsOpenDeposit] = useState(false)
     const [isBorder, setIsBorder] = useState(false)
     const [submitText, setSubmitText] = useState('')
-    const { newRewards, poolInfo, totalStaked, holderUnlockTime, pendingReward, blockTimestamp, claimCallback, updateStakingStats } = useStaking()
+    const { newRewards, userInfo, poolInfo, totalStaked, holderUnlockTime, pendingReward, blockTimestamp, claimCallback, unstakeCallback, updateStakingStats } = useStaking()
     const [isClaiming, setIsClaiming] = useState(false)
+    const [isUnstaking, setIsUnstaking] = useState(false)
 
     const handleFocus = () => {
         setIsBorder(true)
@@ -61,6 +62,30 @@ export const StakingPlatform = () => {
             })
         } catch (error) {
             setIsClaiming(false)
+            console.log(error)
+        }
+        return null;
+    }
+
+    const onUnstake = () => {
+        setIsUnstaking(true)
+        try {
+            unstakeCallback().then((res: any) => {
+                if (res.status === 1) {
+                    toast.success("Unstaked successfully!")
+                    updateStakingStats()
+                } else {
+                    toast.error(`Transaction reverted! Tx:${res.hash}`)
+                }
+                setIsUnstaking(false)
+            }).catch(error => {
+                setIsUnstaking(false)
+                console.log(error)
+                let err: any = error
+                toast.error((err.data?.message || err?.message || err).toString())
+            })
+        } catch (error) {
+            setIsUnstaking(false)
             console.log(error)
         }
         return null;
@@ -135,17 +160,28 @@ export const StakingPlatform = () => {
                             <span className='text-black text-[12px] uppercase'>staking contract</span>
                             <span className='text-white text-[12px] uppercase text-right'>{shortenAddress(StakingContractAddress, 3)}</span>
                         </div>
-                        <div className='w-full flex justify-center'>
+                        <div className='w-full flex justify-center gap-4 flex-wrap'>
                             <LoadingButton
                                 variant="outlined"
-                                sx={{ border: "3px solid #7F41E4", width: '280px', height: '48px', fontFamily: 'agressive' }}
+                                sx={{ backgroundColor: "#ffffff", border: "3px solid #7F41E4", width: '280px', height: '48px', fontFamily: 'agressive' }}
                                 loading={isClaiming}
                                 loadingPosition="start"
-                                color="primary"
+                                color="secondary"
                                 onClick={onClaim}
                                 disabled={isClaiming || !account || pendingReward.lte(0) || blockTimestamp<holderUnlockTime}
                             >
                                 <span className='text-[20px] text-black'>{isClaiming ? 'Claiming ...' : "Claim Rewards"}</span>
+                            </LoadingButton>
+                            <LoadingButton
+                                variant="outlined"
+                                sx={{ border: "3px solid #7F41E4", width: '280px', height: '48px', fontFamily: 'agressive' }}
+                                loading={isUnstaking}
+                                loadingPosition="start"
+                                color="secondary"
+                                onClick={onUnstake}
+                                disabled={isUnstaking || !account || userInfo.amount.lte(0)}
+                            >
+                                <span className='text-[20px] text-black'>{isUnstaking ? 'Unstaking ...' : "Unstake"}</span>
                             </LoadingButton>
                         </div>
                     </div>

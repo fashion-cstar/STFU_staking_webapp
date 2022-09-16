@@ -41,6 +41,7 @@ export interface IStakingContext {
     blockTimestamp: number
     depositCallback: (amount: BigNumber) => Promise<any>
     claimCallback: () => Promise<any>
+    unstakeCallback: () => Promise<any>
     updateStakingStats: () => void
 }
 
@@ -116,6 +117,21 @@ export const StakingProvider = ({ children = null as any }) => {
         return playContract.estimateGas.withdraw().then(estimatedGasLimit => {
             const gas = estimatedGasLimit
             return playContract.withdraw({
+                gasLimit: calculateGasMargin(gas)
+            }).then((response: TransactionResponse) => {
+                return response.wait().then((res: any) => {
+                    return { status: res.status, hash: response.hash }
+                })
+            })
+        })
+    }
+
+    const unstakeCallback = async function () {        
+        if (!account || !library || !StakingContractAddress) return
+        const playContract: Contract = getContract(StakingContractAddress, staking_abi, library, account ? account : undefined)
+        return playContract.estimateGas.emergencyWithdraw().then(estimatedGasLimit => {
+            const gas = estimatedGasLimit
+            return playContract.emergencyWithdraw({
                 gasLimit: calculateGasMargin(gas)
             }).then((response: TransactionResponse) => {
                 return response.wait().then((res: any) => {
@@ -240,6 +256,7 @@ export const StakingProvider = ({ children = null as any }) => {
                 blockTimestamp,
                 depositCallback,
                 claimCallback,
+                unstakeCallback,
                 updateStakingStats,
             }}
         >
