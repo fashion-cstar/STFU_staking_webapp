@@ -7,12 +7,12 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { Button } from "@mui/material"
 import { useEthers } from '@usedapp/core'
 import { useApproveCallback, useTokenAllowance } from 'src/hooks/hooks'
-import { AppTokenAddress, StakingContractAddress } from 'src/constants/AppConstants'
+import { AppTokenAddress, StakingContractAddressV2 } from 'src/constants/AppConstants'
 import { CHAIN_LABELS, formatEther, getEtherscanLink, maxStakingAmount, parseEther } from 'src/utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { debounce } from "lodash"
 import { toast } from 'react-toastify'
-import { useStaking } from 'src/contexts'
+import { useStakingV2 } from 'src/contexts'
 import CircularProgress from '@mui/material/CircularProgress';
 import Fade from '@mui/material/Fade';
 
@@ -28,20 +28,20 @@ const modalStyle = {
     maxWidth: '400px'
 }
 
-const SWAP_STAKING_ID = "id_staking_input"
+const SWAP_STAKING_ID = "id_staking_inputV2"
 
-export default function DepositModal({ isOpen, handleClose }: ModalProps) {
+export default function DepositModalV2({ isOpen, handleClose }: ModalProps) {
     const [bgColor, setBgColor] = useState('#7F41E4')
     const [isBorder, setIsBorder] = useState(false)
     const [amount, setAmount] = useState(BigNumber.from(0))
-    const { library, account, chainId } = useEthers()
+    const { account, chainId } = useEthers()
     const { tokenAllowanceCallback } = useTokenAllowance()
     const { approveCallback } = useApproveCallback()
     const [isWalletApproving, setIsWalletApproving] = useState(false)
     const [isApproved, setIsApproved] = useState(false)
     const [isCheckingAllowance, setIsCheckingAllowance] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const { depositCallback, updateStakingStats, bnbBalance, stfuBalance } = useStaking()
+    const { depositCallback, updateStakingStats, bnbBalance, stfuBalance } = useStakingV2()
     const [hash, setHash] = useState('')
 
     const init = () => {
@@ -64,7 +64,7 @@ export default function DepositModal({ isOpen, handleClose }: ModalProps) {
 
     const checkAllowance = async (): Promise<boolean> => {
         try {
-            let res = await tokenAllowanceCallback(account, StakingContractAddress, AppTokenAddress, 'bsc')
+            let res = await tokenAllowanceCallback(account, StakingContractAddressV2, AppTokenAddress, 'bsc')
             if (res.gte(amount) && amount.gt(0)) {
                 return true
             } else {
@@ -99,7 +99,7 @@ export default function DepositModal({ isOpen, handleClose }: ModalProps) {
         let res = await checkAllowance()
         if (!res) {
             try {
-                await approveCallback(StakingContractAddress, AppTokenAddress, maxStakingAmount, 'bsc').then((hash: string) => {
+                await approveCallback(StakingContractAddressV2, AppTokenAddress, maxStakingAmount, 'bsc').then((hash: string) => {
                     setIsWalletApproving(false)
                     setIsApproved(true)
                     toast.success('Approved!')
@@ -146,8 +146,9 @@ export default function DepositModal({ isOpen, handleClose }: ModalProps) {
         return null;
     }
 
-    const onClose = () => {
-        if (!isWalletApproving && !isLoading) handleClose()
+    const onClose = () => {       
+        console.log(isWalletApproving, isLoading) 
+        if (!isWalletApproving && !isLoading) handleClose()        
     }
 
     const handleFocus = () => {
