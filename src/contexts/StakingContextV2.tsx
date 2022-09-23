@@ -229,7 +229,7 @@ export const StakingProviderV2 = ({ children = null as any }) => {
         }).catch(error => { console.log(error) })
 
         fetchPoolInfo(stakingContract).then(result => {
-            setPoolInfo({ lpToken: result?.lpToken, allocPoint: result?.allocPoint, lastRewardTimestamp: Number(result?.lastRewardTimestamp), accTokensPerShare: result?.accTokensPerShare })
+            setPoolInfo({ lpToken: result?.lpToken, allocPoint: result?.allocPoint, lastRewardTimestamp: Number(result?.lastRewardTimestamp), accTokensPerShare: result?.accTokensPerShare })            
         }).catch(error => { console.log(error) })
 
         if (account) {

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useStaking, useStakingV2 } from 'src/contexts'
 import useSTFU from 'src/hooks/useSTFU'
-import { formatEther } from 'src/utils'
+import { formatEther, parseEther } from 'src/utils'
 
 export const YourStake = ({ stakingVersion }: { stakingVersion: number }) => {
     const { account } = useEthers()
@@ -20,8 +20,8 @@ export const YourStake = ({ stakingVersion }: { stakingVersion: number }) => {
     const [isManualCompounding, setIsManualCompounding] = useState(false)
     const [compoundDisabled, setCompoundDisabled] = useState(false)
 
-    useEffect(() => {        
-        if (isManualCompounding || pendingRewardV2.lte(0) || !account) setCompoundDisabled(true)
+    useEffect(() => {
+        if (isManualCompounding || pendingRewardV2.lte(parseEther('0.0001', 18)) || !account) setCompoundDisabled(true)
         else setCompoundDisabled(false)
     }, [isManualCompounding, pendingRewardV2, account])
 
