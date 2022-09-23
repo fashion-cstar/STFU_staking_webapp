@@ -66,4 +66,5 @@ export const BUY_STFU_URL = 'https://pancakeswap.finance/swap?outputCurrency=' +
 
 export const PCS_API_ENDPOINTS = process.env.PCS_API_ENDPOINTS || "https://api.pancakeswap.info"
 
-export const network = 'testnet'
+export const StakingV2_LockDuration = '28 days'
+export const StakingV1_LockDuration = '24 hrs'

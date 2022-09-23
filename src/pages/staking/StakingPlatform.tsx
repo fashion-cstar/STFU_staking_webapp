@@ -1,7 +1,7 @@
 import { Button } from "@mui/material"
 import { useEthers } from '@usedapp/core'
 import { useState } from "react"
-import { AppTokenAddress, BUY_STFU_URL, StakingContractAddress, StakingContractAddressV2 } from "src/constants/AppConstants"
+import { AppTokenAddress, BUY_STFU_URL, StakingContractAddress, StakingContractAddressV2, StakingV1_LockDuration, StakingV2_LockDuration } from "src/constants/AppConstants"
 import DepositModal from "./DepositModal"
 import DepositModalV2 from "./DepositModalV2"
 import { formatEther, getShortDateTimeWithoutSeconds_, shortenAddress } from "src/utils"
@@ -198,7 +198,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                 <div className='w-full flex flex-col gap-4' style={{ paddingBottom: '48px' }}>
                     {stakingVersion > 0 && <>
                         <div className='w-full mt-8 text-center text-black text-[18px] md:text-[20px] uppercase flex gap-2 flex-wrap justify-center'>
-                            <div>Staking Information</div><div>({stakingVersion === 0 ? '24 hrs lock' : '30 days lock'})</div>
+                            <div>Staking Information</div><div>({stakingVersion === 1 ? `${StakingV1_LockDuration} lock` : `${StakingV2_LockDuration} lock`})</div>
                         </div>
                         <div className='w-full bg-[#6FFF39] flex py-4 px-4 md:px-8 flex-col gap-4'>
                             <div className='flex justify-between md:px-10'>
@@ -298,7 +298,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                                 color="secondary"
                                 onClick={() => onChooseStaking(1)}
                             >
-                                <span className='text-[20px] text-black'>24 hrs lock</span>
+                                <span className='text-[20px] text-black'>{`${StakingV1_LockDuration} lock`}</span>
                             </Button>
                             <Button
                                 variant="outlined"
@@ -306,7 +306,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                                 color="secondary"
                                 onClick={() => onChooseStaking(2)}
                             >
-                                <span className='text-[20px] text-black'>30 days lock</span>
+                                <span className='text-[20px] text-black'>{`${StakingV2_LockDuration} lock`}</span>
                             </Button>
                         </div>
                     </div>}
