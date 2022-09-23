@@ -7,7 +7,7 @@ import { getAddress } from '@ethersproject/address'
 import { ChainId } from "@usedapp/core";
 import { RpcProviders } from 'src/constants/AppConstants'
 
-export const network = 'mainnet'
+export var network='mainnet'
 
 enum NETWORK_NAME {
     Ethereum = 'ethereum',

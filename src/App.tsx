@@ -10,14 +10,16 @@ import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { Staking, Home } from 'src/pages'
 import { StakingProvider } from 'src/contexts'
+import { StakingProviderV2 } from './contexts/StakingContextV2';
 
 // mainet
 const config: Config = {
-  readOnlyChainId: BSC.chainId,
+  // readOnlyChainId: BSC.chainId,
   readOnlyUrls: {
     [BSC.chainId]: Rpc_URLS[ChainId.BSC] ?? '',
+    [BSCTestnet.chainId]: Rpc_URLS[ChainId.BSCTestnet] ?? ''
   },
-  networks: [BSC, Mainnet, BSCTestnet],
+  // networks: [BSC, Mainnet, BSCTestnet],
   autoConnect: false
 }
 
@@ -27,19 +29,21 @@ function App() {
       <ThemeProvider theme={theme}>
         <RefreshContextProvider>
           <StakingProvider>
-            <BrowserRouter>
-              <Layout>
-                <Routes>
-                  <Route path="/staking" element={<Staking />} />
-                  <Route path="/home" element={<Home />} />
-                  <Route
-                    path="*"
-                    element={<Navigate to="/staking" replace />}
-                  />
-                </Routes>
-              </Layout>
-            </BrowserRouter>
-            <ToastContainer />
+            <StakingProviderV2>
+              <BrowserRouter>
+                <Layout>
+                  <Routes>
+                    <Route path="/staking" element={<Staking />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route
+                      path="*"
+                      element={<Navigate to="/staking" replace />}
+                    />
+                  </Routes>
+                </Layout>
+              </BrowserRouter>
+              <ToastContainer />
+            </StakingProviderV2>
           </StakingProvider>
         </RefreshContextProvider>
       </ThemeProvider>
