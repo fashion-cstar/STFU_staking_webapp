@@ -7,6 +7,7 @@ import { RpcProviders } from "src/constants/AppConstants"
 import useRefresh from './useRefresh'
 import { TransactionResponse } from '@ethersproject/providers'
 import { getContract, getProviderOrSigner, getChainIdFromName } from 'src/utils'
+import { MaxUint256 } from '@ethersproject/constants'
 
 export function useNativeTokenBalance(blockchain: string): BigNumber {
   const { account } = useEthers()
@@ -125,13 +126,11 @@ export function useApproveCallback(): {
   approveCallback: (recvAddress: string, tokenContractAddress: string, amount: number, blockchain: string) => Promise<string>
 } {
   const { account, library } = useEthers()
-  const approveCallback = async function (recvAddress: string, tokenContractAddress: string, amount: number, blockchain: string) {
-    const chainId = getChainIdFromName(blockchain);
-    const tokenContract: Contract = getContract(tokenContractAddress, ERC20_ABI, library, account ? account : undefined)
-    let decimals = await tokenContract.decimals()
+  const approveCallback = async function (recvAddress: string, tokenContractAddress: string, amount: number, blockchain: string) {    
+    const tokenContract: Contract = getContract(tokenContractAddress, ERC20_ABI, library, account ? account : undefined)    
     if (!account || !library) return
     const provider = getProviderOrSigner(library, account) as any;
-    return tokenContract.connect(provider).approve(recvAddress, tokenContract.totalSupply()).then((response: TransactionResponse) => {
+    return tokenContract.connect(provider).approve(recvAddress, MaxUint256).then((response: TransactionResponse) => {
       return response.wait().then((_: any) => {
         return response.hash
       })
