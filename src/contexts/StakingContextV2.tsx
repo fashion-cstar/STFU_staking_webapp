@@ -118,10 +118,10 @@ export const StakingProviderV2 = ({ children = null as any }) => {
 
     const claimCallback = async function () {
         if (!account || !library || !StakingContractAddressV2) return
-        const playContract: Contract = getContract(StakingContractAddressV2, staking_abiV2, library, account ? account : undefined)
-        return playContract.estimateGas.withdraw().then(estimatedGasLimit => {
+        const stakingContract: Contract = getContract(StakingContractAddressV2, staking_abiV2, library, account ? account : undefined)
+        return stakingContract.estimateGas.withdraw().then(estimatedGasLimit => {
             const gas = estimatedGasLimit
-            return playContract.withdraw({
+            return stakingContract.withdraw({
                 gasLimit: calculateGasMargin(gas)
             }).then((response: TransactionResponse) => {
                 return response.wait().then((res: any) => {
@@ -133,10 +133,10 @@ export const StakingProviderV2 = ({ children = null as any }) => {
 
     const unstakeCallback = async function () {
         if (!account || !library || !StakingContractAddressV2) return
-        const playContract: Contract = getContract(StakingContractAddressV2, staking_abiV2, library, account ? account : undefined)
-        return playContract.estimateGas.emergencyWithdraw().then(estimatedGasLimit => {
+        const stakingContract: Contract = getContract(StakingContractAddressV2, staking_abiV2, library, account ? account : undefined)
+        return stakingContract.estimateGas.emergencyWithdraw().then(estimatedGasLimit => {
             const gas = estimatedGasLimit
-            return playContract.emergencyWithdraw({
+            return stakingContract.emergencyWithdraw({
                 gasLimit: calculateGasMargin(gas)
             }).then((response: TransactionResponse) => {
                 return response.wait().then((res: any) => {
