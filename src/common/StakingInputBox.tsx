@@ -1,6 +1,6 @@
 import InputBoxContainer from './InputBoxContainer'
 
-interface InputBoxProps {    
+interface InputBoxProps {
     id: string
     onChange: (val: any) => void
     handleFocus: () => void
@@ -17,12 +17,16 @@ export default function StakingInputBox({ id, onChange, handleFocus, handleBlur 
                 placeholder="AMOUNT TO STAKE..."
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                onKeyPress={(e) => {
+                    let ev: any = e.target;
+                    ((ev.value.toString().length >= 16) || (e.key === 'Enter')) && e.preventDefault();
+                }}
                 onChange={(event) => {
                     if (isNaN(Number(event.target.value))) onChange(0)
                     else onChange(event.target.value)
                 }
-                }                
-                required={true}                
+                }
+                required={true}
             />
         </InputBoxContainer>
     )
