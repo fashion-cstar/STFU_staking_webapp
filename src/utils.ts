@@ -253,3 +253,5 @@ export const getShortenAmount = (amount: number, fixed: number): string => {
 }
 
 export const maxStakingAmount = 1000000000
+
+export const maxAmount = 1000000000

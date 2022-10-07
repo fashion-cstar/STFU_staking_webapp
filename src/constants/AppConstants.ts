@@ -62,9 +62,13 @@ export const StakingContractAddress = "0xfDb04cAaCB52f38c4f00b9E9DE708a83a4cbDC2
 export const StakingContractAddressV2 = "0xEFab90b314961a766c6AD04788c6a86E2466CAE9"
 export const AppTokenLP = "0x8dEC588B847d88D3ff7fA7FA76a925a5390361F2"
 
+export const NFTContractAddress = "0xA9345DabCc96D57ed48a0C69b54D465774dAa43D"
+
 export const BUY_STFU_URL = 'https://pancakeswap.finance/swap?outputCurrency=' + AppTokenAddress
 
 export const PCS_API_ENDPOINTS = process.env.PCS_API_ENDPOINTS || "https://api.pancakeswap.info"
 
 export const StakingV2_LockDuration = '28 days'
 export const StakingV1_LockDuration = '24 hrs'
+
+export const maxAmount = 1000000000

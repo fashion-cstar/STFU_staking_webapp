@@ -30,6 +30,53 @@ code {
   background-color: #191E2C;
 }
 
+.bg-app-purple {
+  background-color: #7F41E4;
+}
+
+@font-face {
+  font-family: "Agressive";
+  src: url("./assets/fonts/AGRESSIVE.woff") format("woff"), url("./assets/fonts/AGRESSIVE.otf") format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bebas';
+  src: url('./assets/fonts/BebasNeueBold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Bebas';
+  src: url('./assets/fonts/BebasNeueLight.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Bebas';
+  src: url('./assets/fonts/BebasNeue.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Bebas';
+  src: url('./assets/fonts/BebasNeueRegular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Bebas';
+  src: url('./assets/fonts/BebasNeueThin.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+}
+
 @font-face {
   font-family: "Agressive";
   src: url("./assets/fonts/AGRESSIVE.woff") format("woff"), url("./assets/fonts/AGRESSIVE.otf") format('opentype');
@@ -74,4 +121,28 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+@media only screen and (min-width: 1280px) {
+  .mint-title-shadow {
+    text-shadow: 10px 10px #6FFF39
+  }
+}
+
+@media only screen and (max-width: 1279px) {
+  .mint-title-shadow {
+    text-shadow: 8px 8px #6FFF39
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .mint-title-shadow {
+    text-shadow: 6px 6px #6FFF39
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .mint-title-shadow {
+    text-shadow: 4px 4px #6FFF39
+  }
 }
