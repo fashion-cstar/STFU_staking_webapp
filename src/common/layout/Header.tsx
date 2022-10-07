@@ -80,10 +80,14 @@ export default function Header() {
                       : SIDEBAR_ITEMS[key]
                   }
                   placement="bottom"
-                >
-                  <div className={`${isActive ? '' : 'cursor-pointer'}`} onClick={() => onClickMenu(SIDEBAR_ROUTES[key], isActive)}>
+                >    
+                  {!isActive ? <Link to={SIDEBAR_ROUTES[key]}>
                     <span className={`text-[18px] ${isActive ? 'text-[#7F41E4]' : 'text-white'} text-white font-medium`}>{SIDEBAR_ITEMS[key]}</span>
-                  </div>
+                  </Link> :
+                    <div>
+                      <span className={`text-[18px] ${isActive ? 'text-[#7F41E4]' : 'text-white'} text-white font-medium`}>{SIDEBAR_ITEMS[key]}</span>
+                    </div>
+                  }
                 </Tooltip>
               </div>
             )
