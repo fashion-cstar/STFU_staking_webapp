@@ -36,7 +36,7 @@ export const NFTStaking = () => {
                             <span className='font-semibold' style={{ fontFamily: 'Bebas' }}>
                                 This requires a BSC transaction and a one time gas fee.
                                 Select the NFTs you want to stake on the left.
-                                Click "Stake Selected Tokens" and approve the transaction.
+                                Click "Stake Selected NFTs" and approve the transaction.
                                 Sit back and earn BNB every day.
                             </span>
                         </div>
