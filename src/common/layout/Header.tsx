@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-pascal-case */
-import { Portal } from "@mui/base"
+import { Link } from 'react-router-dom'
 import { useState } from "react"
 import Logo from "../svgs/Logo"
 import Wallet from "../Wallet"
@@ -41,10 +41,15 @@ export default function Header() {
                 }
                 placement="bottom"
               >
-                <div className={`${isActive ? '' : 'cursor-pointer'}`} onClick={() => onClickMenu(SIDEBAR_ROUTES[key], isActive)}>
+                {!isActive ? <Link to={SIDEBAR_ROUTES[key]}>
                   <span className='text-[20px] text-white font-medium'>{SIDEBAR_ITEMS[key]}</span>
                   <div className={`bg-[#7F41E4] h-0.5 w-full ${isActive ? 'block' : 'hidden'}`}></div>
-                </div>
+                </Link> :
+                  <div>
+                    <span className='text-[20px] text-white font-medium'>{SIDEBAR_ITEMS[key]}</span>
+                    <div className={`bg-[#7F41E4] h-0.5 w-full 'block'`}></div>
+                  </div>
+                }
               </Tooltip>
             </div>
           )
