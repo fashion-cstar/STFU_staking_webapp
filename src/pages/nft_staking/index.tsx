@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react'
-import { useNFT } from 'src/contexts'
 
 export const NFTStaking = () => {    
 
