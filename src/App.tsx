@@ -5,12 +5,10 @@ import { Rpc_URLS } from './constants/AppConstants'
 import { ThemeProvider } from "@emotion/react"
 import theme from "src/theme/theme"
 import Layout from 'src/common/layout/Layout'
-import { NFTProvider, RefreshContextProvider } from "src/contexts"
+import { NFTProvider, NFTStakingProvider, RefreshContextProvider, StakingProvider, StakingProviderV2 } from "src/contexts"
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { Staking, NFTStaking, Home } from 'src/pages'
-import { StakingProvider } from 'src/contexts'
-import { StakingProviderV2 } from './contexts/StakingContextV2';
 
 // mainet
 const config: Config = {
@@ -31,19 +29,21 @@ function App() {
           <StakingProvider>
             <StakingProviderV2>
               <NFTProvider>
-                <BrowserRouter>
-                  <Layout>
-                    <Routes>
-                      <Route path="/staking" element={<Staking />} />
-                      <Route path="/nft_staking" element={<NFTStaking />} />
-                      <Route path="/home" element={<Home />} />
-                      <Route
-                        path="*"
-                        element={<Navigate to="/staking" replace />}
-                      />
-                    </Routes>
-                  </Layout>
-                </BrowserRouter>
+                <NFTStakingProvider>
+                  <BrowserRouter>
+                    <Layout>
+                      <Routes>
+                        <Route path="/staking" element={<Staking />} />
+                        <Route path="/nft_staking" element={<NFTStaking />} />
+                        <Route path="/home" element={<Home />} />
+                        <Route
+                          path="*"
+                          element={<Navigate to="/staking" replace />}
+                        />
+                      </Routes>
+                    </Layout>
+                  </BrowserRouter>
+                </NFTStakingProvider>
                 <ToastContainer />
               </NFTProvider>
             </StakingProviderV2>
