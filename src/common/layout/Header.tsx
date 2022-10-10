@@ -27,7 +27,7 @@ export default function Header() {
 
   const NavMenu = () => {
     return (
-      <div className='flex gap-8 lg:gap-10'>
+      <div className='flex gap-8 lg:gap-10 mx-8 mt-2'>
         {Object.keys(SIDEBAR_ITEMS).map((key, index) => {
           const isActive = routeMatch(SIDEBAR_ROUTES[key])
           const isComingSoon = SIDEBAR_ROUTES[key] === "/coming-soon"
@@ -43,11 +43,11 @@ export default function Header() {
               >
                 {!isActive ? <Link to={SIDEBAR_ROUTES[key]}>
                   <span className='text-[20px] text-white font-medium'>{SIDEBAR_ITEMS[key]}</span>
-                  <div className={`bg-[#7F41E4] h-0.5 w-full ${isActive ? 'block' : 'hidden'}`}></div>
+                  <div className={`bg-app-purple h-0.5 w-full ${isActive ? 'block' : 'hidden'}`}></div>
                 </Link> :
                   <div>
                     <span className='text-[20px] text-white font-medium'>{SIDEBAR_ITEMS[key]}</span>
-                    <div className={`bg-[#7F41E4] h-0.5 w-full 'block'`}></div>
+                    <div className={`bg-app-purple h-0.5 w-full 'block'`}></div>
                   </div>
                 }
               </Tooltip>
@@ -82,10 +82,10 @@ export default function Header() {
                   placement="bottom"
                 >    
                   {!isActive ? <Link to={SIDEBAR_ROUTES[key]}>
-                    <span className={`text-[18px] ${isActive ? 'text-[#7F41E4]' : 'text-white'} text-white font-medium`}>{SIDEBAR_ITEMS[key]}</span>
+                    <span className={`text-[18px] ${isActive ? 'text-app-purple' : 'text-white'} text-white font-medium`}>{SIDEBAR_ITEMS[key]}</span>
                   </Link> :
                     <div>
-                      <span className={`text-[18px] ${isActive ? 'text-[#7F41E4]' : 'text-white'} text-white font-medium`}>{SIDEBAR_ITEMS[key]}</span>
+                      <span className={`text-[18px] ${isActive ? 'text-app-purple' : 'text-white'} text-white font-medium`}>{SIDEBAR_ITEMS[key]}</span>
                     </div>
                   }
                 </Tooltip>
@@ -104,7 +104,7 @@ export default function Header() {
     <div style={{ zIndex: 2 }}>
       <div className="hidden lg:block fixed top-0 left-0 py-3 w-full items-center bg-[#000000] shadow-lg">
         <div className="flex flex-col w-full justify-center items-center">
-          <div className="w-full bg-[#6FFF39] h-[10px] mb-2" />
+          <div className="w-full bg-app-green h-[10px] mb-2" />
           <div className="flex w-full px-10 max-w-[1440px] items-center justify-between">
             <div className="flex items-center gap-12">
               <a href="/"><Logo /></a>
@@ -121,7 +121,7 @@ export default function Header() {
       </div>
       <div className="hidden md:block lg:hidden fixed top-0 left-0 py-3 w-full items-center bg-[#000000] shadow-lg">
         <div className="flex flex-col w-full justify-center items-center">
-          <div className="w-full bg-[#6FFF39] h-[10px] mb-2" />
+          <div className="w-full bg-app-green h-[10px] mb-2" />
           <div className="flex px-8 w-full items-center justify-between">
             <div className="flex items-center gap-10">
               <a href="/"><Logo /></a>
@@ -138,7 +138,7 @@ export default function Header() {
       </div>
       <div className="md:hidden fixed top-0 left-0 py-3 w-full items-center bg-[#000000] shadow-lg">
         <div className="flex flex-col w-full justify-center items-center">
-          <div className="w-full bg-[#6FFF39] h-[10px] mb-2" />
+          <div className="w-full bg-app-green h-[10px] mb-2" />
           <div className="flex w-full px-6 items-center justify-between">
             <div className="flex items-center gap-4 mt-2">
               <a href="/"><Logo_mobile /></a>

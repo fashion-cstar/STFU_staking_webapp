@@ -5,7 +5,7 @@ import { Contract } from '@ethersproject/contracts'
 import { useEthers } from "@usedapp/core";
 import { getContract, calculateGasMargin } from 'src/utils'
 import { TransactionResponse } from '@ethersproject/providers'
-import { RpcProviders, NFTStakingContractAddress, AppTokenAddress } from "src/constants/AppConstants"
+import { RpcProviders, NFTStakingContractAddress, AppTokenAddress, ZERO_ADDRESS } from "src/constants/AppConstants"
 import useRefresh from 'src/hooks/useRefresh'
 import { getChainIdFromName } from 'src/utils'
 import nftStaking_abi from 'src/constants/abis/NFT_Staking.json'
@@ -21,18 +21,33 @@ export interface INFTStakingContext {
     rewardsToken: any
     availableRewards: BigNumber
     isApprovedForAll: boolean
-    nftCollection: string
+    nftCollection: Contract
     rewardsPerDay: BigNumber
-    unstakedInfo: any[]
-    stakedInfo: any[]
-    allStakedInfo: any[]
+    unstakedInfo: INFTokenInfo[]
+    stakedInfo: INFTStakedInfo
+    allStakedInfo: any
     blockTimestamp: number
-    fetchingStatus:boolean
+    fetchingStatus: boolean
     stakeCallback: (tokenId: BigNumber) => Promise<any>
     claimCallback: () => Promise<any>
     unstakeCallback: (tokenId: BigNumber) => Promise<any>
     setApprovalForAllCallback: () => Promise<any>
     updateStakingStats: () => void
+}
+
+export interface INFTokenInfo {
+    owner: string
+    tokenId: number
+    tokenURI: string
+    metadata: any
+}
+
+export interface INFTStakedInfo {
+    amountStaked: number
+    stakedTokens: INFTokenInfo[]
+    timeOfLastUpdate: number
+    unclaimedRewards: BigNumber
+    rewardDebt: BigNumber
 }
 
 const NFTStakingContext = React.createContext<Maybe<INFTStakingContext>>(null)
@@ -45,14 +60,14 @@ export const NFTStakingProvider = ({ children = null as any }) => {
     const [bnbBalance, setBnbBalance] = useState(BigNumber.from(0))
     const nativeBalance = useNativeTokenBalance('bsc')
     const { nativeBalanceCallback } = useTokenBalanceCallback()
-    const [rewardsToken, setRewardsToken] = useState({ address: '', symbol: 'BNB', decimals: 18 })
+    const [rewardsToken, setRewardsToken] = useState()
     const [availableRewards, setAvailableRewards] = useState(BigNumber.from(0))
     const [isApprovedForAll, setIsApprovedForAll] = useState(false)
-    const [nftCollection, setNFTCollection] = useState('')
+    const [nftCollection, setNFTCollection] = useState<Contract>()
     const [rewardsPerDay, setRewardsPerDay] = useState(BigNumber.from(0))
-    const [unstakedInfo, setUnstakedInfo] = useState<any[]>()
-    const [stakedInfo, setStakedInfo] = useState<any[]>()
-    const [allStakedInfo, setAllStakedInfo] = useState<any[]>()
+    const [unstakedInfo, setUnstakedInfo] = useState<INFTokenInfo[]>()
+    const [stakedInfo, setStakedInfo] = useState<INFTStakedInfo>()
+    const [allStakedInfo, setAllStakedInfo] = useState<any>()
     const [blockTimestamp, setBlockTimestamp] = useState(0)
     const [fetchingStatus, setFetchingStatus] = useState(false)
 
@@ -120,9 +135,9 @@ export const NFTStakingProvider = ({ children = null as any }) => {
     const unstakeCallback = async function (tokenId: BigNumber) {
         if (!account || !library || !NFTStakingContractAddress) return
         const stakingContract: Contract = getContract(NFTStakingContractAddress, nftStaking_abi, library, account ? account : undefined)
-        return stakingContract.estimateGas.withdraw(tokenId).then(estimatedGasLimit => {
+        return stakingContract.estimateGas.unstake(tokenId).then(estimatedGasLimit => {
             const gas = estimatedGasLimit
-            return stakingContract.withdraw(tokenId, {
+            return stakingContract.unstake(tokenId, {
                 gasLimit: calculateGasMargin(gas)
             }).then((response: TransactionResponse) => {
                 return response.wait().then((res: any) => {
@@ -151,12 +166,16 @@ export const NFTStakingProvider = ({ children = null as any }) => {
 
     const fetchRewardsToken = async (stakingContract: Contract) => {
         let res = await stakingContract.rewardsToken()
-        const chainId = getChainIdFromName(blockchain);
-        const tokenContract: Contract = getContract(res, ERC20_ABI, RpcProviders[chainId], account ? account : undefined)
-        const name = await tokenContract.name()
-        const decimals = await tokenContract.decimals()
-        const symbol = await tokenContract.symbol()
-        return { name: name, symbol: symbol, decimals: decimals }
+        if (res.toLowerCase() === ZERO_ADDRESS) {
+            return { address: res, name: "BNB Token", symbol: "BNB", decimals: 18 }
+        } else {
+            const chainId = getChainIdFromName(blockchain);
+            const tokenContract: Contract = getContract(res, ERC20_ABI, RpcProviders[chainId], account ? account : undefined)
+            const name = await tokenContract.name()
+            const decimals = await tokenContract.decimals()
+            const symbol = await tokenContract.symbol()
+            return { address: res, name: name, symbol: symbol, decimals: decimals }
+        }
     }
 
     const fetchAvailableRewards = async (stakingContract: Contract) => {
@@ -165,9 +184,12 @@ export const NFTStakingProvider = ({ children = null as any }) => {
     }
 
     const fetchIsApprovedForAll = async (stakingContract: Contract) => {
-        const nftAddress = await stakingContract.nftCollection()
-        const chainId = getChainIdFromName(blockchain);
-        const tokenContract: Contract = getContract(nftAddress, nft_abi, RpcProviders[chainId], account ? account : undefined)
+        let tokenContract: Contract = nftCollection
+        if (!tokenContract) {
+            const nftAddress = await stakingContract.nftCollection()
+            const chainId = getChainIdFromName(blockchain);
+            tokenContract = getContract(nftAddress, nft_abi, RpcProviders[chainId], account ? account : undefined)
+        }
         const res = await tokenContract.isApprovedForAll(account, NFTStakingContractAddress)
         return res
     }
@@ -183,15 +205,18 @@ export const NFTStakingProvider = ({ children = null as any }) => {
     }
 
     const fetchUnstakedInfo = async (stakingContract: Contract) => {
-        const nftAddress = await stakingContract.nftCollection()
-        const chainId = getChainIdFromName(blockchain);
-        const tokenContract: Contract = getContract(nftAddress, nft_abi, RpcProviders[chainId], account ? account : undefined)
+        let tokenContract: Contract = nftCollection
+        if (!tokenContract) {
+            const nftAddress = await stakingContract.nftCollection()
+            const chainId = getChainIdFromName(blockchain);
+            tokenContract = getContract(nftAddress, nft_abi, RpcProviders[chainId], account ? account : undefined)
+        }
         const res = await tokenContract.getNFTSofAddress(account)
-        return res
+        return { tokenContract: tokenContract, result: res }
     }
 
     const fetchStakedInfo = async (stakingContract: Contract) => {
-        const res = await stakingContract.getStakedTokens(account)
+        const res = await stakingContract.getStakedInfo(account)
         return res
     }
 
@@ -200,21 +225,27 @@ export const NFTStakingProvider = ({ children = null as any }) => {
         return res
     }
 
-    const updateStakingStats = async () => {        
+    const updateStakingStats = async () => {
         const chainId = getChainIdFromName(blockchain);
         const stakingContract: Contract = getContract(NFTStakingContractAddress, nftStaking_abi, RpcProviders[chainId], account ? account : undefined)
         setFetchingStatus(true)
 
         fetchRewardsToken(stakingContract).then(async (result: any) => {
             setRewardsToken(result)
-        }).catch(error => { console.log(error) })        
+        }).catch(error => { console.log(error) })
 
         fetchNftCollection(stakingContract).then(result => {
-            setNFTCollection(result)
+            const chainId = getChainIdFromName(blockchain);
+            const tokenContract: Contract = getContract(result, nft_abi, RpcProviders[chainId], account ? account : undefined)
+            setNFTCollection(tokenContract)
         }).catch(error => { console.log(error) })
 
         fetchRewardsPerDay(stakingContract).then(result => {
             setRewardsPerDay(result)
+        }).catch(error => { console.log(error) })
+
+        fetchAllStakedInfo(stakingContract).then(result => {
+            setAllStakedInfo(result)
         }).catch(error => { console.log(error) })
 
         if (account) {
@@ -226,17 +257,49 @@ export const NFTStakingProvider = ({ children = null as any }) => {
             fetchAvailableRewards(stakingContract).then(result => {
                 setAvailableRewards(result)
             }).catch(error => { console.log(error) })
-            
-            fetchUnstakedInfo(stakingContract).then(result => {
-                setUnstakedInfo(result)
+
+            fetchUnstakedInfo(stakingContract).then(async res => {
+                let tokenContract = res.tokenContract
+                let stakedTokens = res.result[1]
+                if (stakedTokens.length > 0) {
+                    let temp: INFTokenInfo[] = []
+                    let tokenURI = ""
+                    let metadata: any
+                    await Promise.all(stakedTokens.map(async (item) => {
+                        try {
+                            tokenURI = await tokenContract.tokenURI(Number(item.tokenId))
+                            metadata = await fetch(tokenURI).then((res) => res.json())
+                            temp.push({ owner: item.owner, tokenId: Number(item.tokenId), tokenURI: tokenURI, metadata: metadata })
+                            setUnstakedInfo(temp)
+                        } catch (err) { }
+                    }))
+                } else {
+                }
             }).catch(error => { console.log(error) })
 
-            fetchStakedInfo(stakingContract).then(result => {
-                setStakedInfo(result)
-            }).catch(error => { console.log(error) })
-
-            fetchAllStakedInfo(stakingContract).then(result => {
-                setAllStakedInfo(result)
+            fetchStakedInfo(stakingContract).then(async result => {
+                if (result.length > 0) {
+                    let temp: INFTokenInfo[] = []
+                    let stakedTokens = result[1]
+                    let tokenContract: Contract = nftCollection
+                    if (!tokenContract) {
+                        const nftAddress = await stakingContract.nftCollection()
+                        const chainId = getChainIdFromName(blockchain);
+                        tokenContract = getContract(nftAddress, nft_abi, RpcProviders[chainId], account ? account : undefined)
+                    }
+                    let tokenURI = ""
+                    let metadata: any
+                    await Promise.all(stakedTokens.map(async (item) => {
+                        try {
+                            tokenURI = await tokenContract.tokenURI(Number(item.tokenId))
+                            metadata = await fetch(tokenURI).then((res) => res.json())
+                            temp.push({ owner: item.staker, tokenId: Number(item.tokenId), tokenURI: tokenURI, metadata: metadata })
+                            setStakedInfo({ amountStaked: Number(result[0]), stakedTokens: temp, timeOfLastUpdate: Number(result[2]), unclaimedRewards: result[3], rewardDebt: result[4] })
+                        } catch (err) { }
+                    }))
+                } else {
+                    setStakedInfo({ amountStaked: 0, stakedTokens: [], timeOfLastUpdate: 0, unclaimedRewards: BigNumber.from(0), rewardDebt: BigNumber.from(0) })
+                }
             }).catch(error => { console.log(error) })
         }
 

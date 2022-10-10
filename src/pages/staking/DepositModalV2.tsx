@@ -215,11 +215,11 @@ export default function DepositModalV2({ isOpen, handleClose }: ModalProps) {
                                     <hr className="w-full mt-3 sm:mt-4" style={{ borderTop: "2px solid #6FFF39" }} />
                                     <div className='mt-4 w-full flex flex-col justify-center items-center'>
                                         <span className='text-[12px] text-white uppercase'>BNB Balance:</span>
-                                        <span className='text-[12px] text-[#6FFF39] uppercase'>{formatEther(bnbBalance, 18, 3, true)}{' '}BNB</span>
+                                        <span className='text-[12px] text-app-green uppercase'>{formatEther(bnbBalance, 18, 3, true)}{' '}BNB</span>
                                     </div>
                                     <div className='w-full flex flex-col justify-center items-center'>
                                         <span className='text-[12px] text-white uppercase'>STFU Balance:</span>
-                                        <span className='text-[12px] text-[#6FFF39] uppercase'>{formatEther(stfuBalance, 18, 3, true)}{' '}STFU</span>
+                                        <span className='text-[12px] text-app-green uppercase'>{formatEther(stfuBalance, 18, 3, true)}{' '}STFU</span>
                                         <span className='text-[12px] text-[#FF8839] uppercase'>{amount.gt(stfuBalance) ? 'Insufficient STFU balance' : ''}</span>
                                     </div>
                                     <div className='mt-8 mb-6 w-full flex flex-col items-center gap-2'>
@@ -259,7 +259,7 @@ export default function DepositModalV2({ isOpen, handleClose }: ModalProps) {
                                         <div className='w-full text-center text-white text-[20px] uppercase'>
                                             Depositing
                                         </div>
-                                        <div className='w-full text-center text-[#6FFF39] text-[20px]'>
+                                        <div className='w-full text-center text-app-green text-[20px]'>
                                             {`${formatEther(amount, 18, 3, true)} STFU`}
                                         </div>
                                     </div>
@@ -282,7 +282,7 @@ export default function DepositModalV2({ isOpen, handleClose }: ModalProps) {
                                         <div className='text-[14px] text-white text-center uppercase'>Tx hash</div>
                                         <div className='text-[12px] text-white text-center'>{hash.slice(0, 10) + '...' + hash.slice(56, 65)}</div>
                                         {chainId && (
-                                            <a className='text-[14px] mt-4 text-[#7F41E4] underline text-center' target="_blank" rel="noreffer" href={getEtherscanLink(chainId, hash, 'transaction')}>
+                                            <a className='text-[14px] mt-4 text-app-purple underline text-center' target="_blank" rel="noreffer" href={getEtherscanLink(chainId, hash, 'transaction')}>
                                                 {chainId && `View on ${CHAIN_LABELS[chainId]}`}
                                             </a>
                                         )}

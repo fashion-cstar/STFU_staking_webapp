@@ -39,7 +39,7 @@ export const ApprovalStaking = () => {
             <div className='max-w-[1440px] w-full px-6 md:px-8'>
                 <div className='w-full text-[22px] md:text-[25px] text-[#000] font-semibold my-6 md:my-8' style={{ fontFamily: 'Bebas' }}>Stake your 'Mad Scientist' NFTs to earn BNB for staking!</div>
                 <div className='w-full flex flex-col gap-6 text-[25px] text-[#000] hidden md:flex'>
-                    <div className=''>Click <span className='text-[#7F41E4]'>"Approve Staking“</span>, so your address is eligible to stake.</div>
+                    <div className=''>Click <span className='text-app-purple'>"Approve Staking“</span>, so your address is eligible to stake.</div>
                     <span className='font-semibold' style={{ fontFamily: 'Bebas' }}>
                         This requires a BSC transaction and a one time gas fee.
                         Select the NFTs you want to stake on the left.
@@ -70,7 +70,7 @@ export const ApprovalStaking = () => {
             <div className='w-full flex justify-center md:hidden'>
                 <div className='max-w-[1440px] w-full px-6 md:px-8'>
                     <div className='w-full flex flex-col gap-6 text-[25px] text-[#000]'>
-                        <div className=''>Click <span className='text-[#7F41E4]'>"Approve Staking“</span>, so your address is eligible to stake.</div>
+                        <div className=''>Click <span className='text-app-purple'>"Approve Staking“</span>, so your address is eligible to stake.</div>
                         <span className='font-semibold' style={{ fontFamily: 'Bebas' }}>
                             This requires a BSC transaction and a one time gas fee.
                             Select the NFTs you want to stake on the left.

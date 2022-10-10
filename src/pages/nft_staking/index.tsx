@@ -11,7 +11,7 @@ export const NFTStaking = () => {
     return (
         <div className="w-full">
             <div className="w-full relative pt-[53px]">
-                <div className={`w-full absolute left-[0px] top-[-10px] h-[53px] bg-[#6FFF39] bg-center bg-repeat-x bg-[url('./assets/nft_mobile_side.svg')] lg:bg-[url('./assets/nft_desktop_side.svg')]`}>
+                <div className={`w-full absolute left-[0px] top-[-10px] h-[53px] bg-app-green bg-center bg-repeat-x bg-[url('./assets/nft_mobile_side.svg')] lg:bg-[url('./assets/nft_desktop_side.svg')]`}>
                 </div>
                 <div className='w-full flex flex-col xl:flex-row justify-center xl:items-end gap-2 px-8'>
                     <div className='flex flex-col lg:flex-row items-center justify-center lg:gap-4 leading-[1] mint-title-shadow lg:mt-4 xl:mt-8'>
@@ -19,10 +19,10 @@ export const NFTStaking = () => {
                         <span className='lg:text-[60px] sm:text-[50px] text-[40px] text-[#000] uppercase'>scientists</span>
                     </div>
                     <div className='hidden lg:flex px-4 justify-center items-end leading-[1]'>
-                        <span className='text-[41px] text-[#7F41E4] uppercase' style={{ fontFamily: 'Bebas' }}>Staking</span>
+                        <span className='text-[41px] text-app-purple uppercase' style={{ fontFamily: 'Bebas' }}>Staking</span>
                     </div>
                     <div className='lg:hidden px-4 flex justify-center'>
-                        <span className='text-[35px] text-[#7F41E4] uppercase' style={{ fontFamily: 'Bebas' }}>Staking</span>
+                        <span className='text-[35px] text-app-purple uppercase' style={{ fontFamily: 'Bebas' }}>Staking</span>
                     </div>
                 </div>
                 <div className='w-full flex justify-center mt-8'>
@@ -34,8 +34,8 @@ export const NFTStaking = () => {
                 {(!isApprovedForAll || !account) ? <ApprovalStaking />:
                 <></>}
                 <div className='h-[40px]' />
-                {/* <div className={`w-full absolute left-[0px] bottom-[-30px] h-[50px] lg:h-[30px] bg-[#6FFF39] bg-center lg:bg-top bg-repeat-x bg-[url('./assets/nft_mobile_side.svg')] lg:bg-[url('./assets/nft_desktop_side.svg')]`}> */}
-                <div className={`w-full absolute lg:fixed left-[0px] bottom-[-30px] lg:bottom-[0px] h-[50px] lg:h-[30px] bg-[#6FFF39] bg-center lg:bg-top bg-repeat-x bg-[url('./assets/nft_mobile_side.svg')] lg:bg-[url('./assets/nft_desktop_side.svg')]`}>
+                {/* <div className={`w-full absolute left-[0px] bottom-[-30px] h-[50px] lg:h-[30px] bg-app-green bg-center lg:bg-top bg-repeat-x bg-[url('./assets/nft_mobile_side.svg')] lg:bg-[url('./assets/nft_desktop_side.svg')]`}> */}
+                <div className={`w-full absolute lg:fixed left-[0px] bottom-[-30px] lg:bottom-[0px] h-[50px] lg:h-[30px] bg-app-green bg-center lg:bg-top bg-repeat-x bg-[url('./assets/nft_mobile_side.svg')] lg:bg-[url('./assets/nft_desktop_side.svg')]`}>
                 </div>
             </div>
         </div>
