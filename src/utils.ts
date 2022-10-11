@@ -8,6 +8,7 @@ import { ChainId } from "@usedapp/core";
 import { RpcProviders } from 'src/constants/AppConstants'
 
 export var network='mainnet'
+// export var network='testnet'
 
 enum NETWORK_NAME {
     Ethereum = 'ethereum',

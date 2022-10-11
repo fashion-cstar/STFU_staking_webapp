@@ -170,7 +170,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
             </div>
             <div className='w-full max-w-[740px] flex flex-col items-center px-2 md:py-6 md:px-10'>
                 <div className='w-full flex flex-col gap-1 md:gap-3 mt-10 md:mt-0'>
-                    <div className='w-full text-center md:text-right text-[#6FFF39] text-[26px] md:text-[34px] uppercase'>STFU LABS</div>
+                    <div className='w-full text-center md:text-right text-app-green text-[26px] md:text-[34px] uppercase'>STFU LABS</div>
                     <div className='w-full text-center md:text-right text-black text-[26px] md:text-[34px] uppercase'>STAKING PLATFORM</div>
                     <div className='flex gap-4 mt-2 mb-4 md:mb-0 md:gap-8 flex-wrap justify-center md:justify-end'>
                         <Button
@@ -200,7 +200,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                         <div className='w-full mt-8 text-center text-black text-[18px] md:text-[20px] uppercase flex gap-2 flex-wrap justify-center'>
                             <div>Staking Information</div><div>({stakingVersion === 1 ? `${StakingV1_LockDuration} lock` : `${StakingV2_LockDuration} lock`})</div>
                         </div>
-                        <div className='w-full bg-[#6FFF39] flex py-4 px-4 md:px-8 flex-col gap-4'>
+                        <div className='w-full bg-app-green flex py-4 px-4 md:px-8 flex-col gap-4'>
                             <div className='flex justify-between md:px-10'>
                                 <span className='text-black text-[12px] uppercase'>Total pending rewards</span>
                                 {stakingVersion === 1 && <span className='text-white text-[12px] uppercase text-right'>{formatEther(newRewards, 18, 4, true)}</span>}
@@ -285,7 +285,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                                     <path d="M19 12H5" stroke="#7F41E4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     <path d="M12 19L5 12L12 5" stroke="#7F41E4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
-                                <div className="text-[16px] md:text-[20px] text-[#7F41E4] underline">change your staking time</div>
+                                <div className="text-[16px] md:text-[20px] text-app-purple underline">change your staking time</div>
                             </div>
                         </div>
                     </>}

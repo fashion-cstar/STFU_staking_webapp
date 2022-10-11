@@ -34,6 +34,17 @@ code {
   background-color: #7F41E4;
 }
 
+.bg-app-green {
+  background-color: #6FFF39;
+}
+
+.text-app-purple {
+  color: #7F41E4;
+}
+
+.text-app-green {
+  color: #6FFF39;
+}
 @font-face {
   font-family: "Agressive";
   src: url("./assets/fonts/AGRESSIVE.woff") format("woff"), url("./assets/fonts/AGRESSIVE.otf") format('opentype');

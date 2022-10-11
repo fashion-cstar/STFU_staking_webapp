@@ -57,12 +57,23 @@ export const RpcProviders: { [chainId in ChainId]?: JsonRpcProvider } = {
     [ChainId.BSCTestnet]: new ethers.providers.JsonRpcProvider(Rpc_URLS[ChainId.BSCTestnet])
 }
 
+export const DEAD_ADDRESS = "0x000000000000000000000000000000000000dead"
+export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
+
 export const AppTokenAddress = "0x4D0cC4786b383e2C7846bA994546B85954924802"
 export const StakingContractAddress = "0xfDb04cAaCB52f38c4f00b9E9DE708a83a4cbDC2E"
 export const StakingContractAddressV2 = "0xEFab90b314961a766c6AD04788c6a86E2466CAE9"
 export const AppTokenLP = "0x8dEC588B847d88D3ff7fA7FA76a925a5390361F2"
 
+export const NFTStakingContractAddress ="0x0D2a5900aa161494fa97c51c106608b83e06cEaa"
 export const NFTContractAddress = "0xA9345DabCc96D57ed48a0C69b54D465774dAa43D"
+
+//testnet
+// export const AppTokenAddress = "0x1e0e0DA973D852fF5C730f13790a754C67f97eeD"
+// export const StakingContractAddress = "0x7ea4Cb15Dc56C71DaC1481827bEDb0E6fD52C8Cf"
+// export const StakingContractAddressV2 = "0x7ea4Cb15Dc56C71DaC1481827bEDb0E6fD52C8Cf"
+// export const NFTStakingContractAddress ="0x2b734d7fBB892a688C633FbeDC4dB5907B818ed3"
+// export const NFTContractAddress = "0xc32E7684C201198b4Db48C66839df97f617bE949"
 
 export const BUY_STFU_URL = 'https://pancakeswap.finance/swap?outputCurrency=' + AppTokenAddress
 
