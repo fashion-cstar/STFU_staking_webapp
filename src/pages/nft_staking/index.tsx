@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEthers } from '@usedapp/core'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { INFTokenInfo, useNFTStaking } from 'src/contexts/NFTStakingContext'
 import { ApprovalStaking } from './ApprovalStaking'
 import { Detailed_view } from './NFT_detail'
@@ -10,6 +10,10 @@ export const NFTStaking = () => {
     const { isApprovedForAll } = useNFTStaking()
     const { account } = useEthers()
     const [viewNFT, setViewNFT] = useState<INFTokenInfo>()
+
+    useEffect(() => {
+        setViewNFT(undefined)
+    }, [account])
 
     return (
         <div className="w-full" style={{ display: 'flex', flexFlow: 'column' }}>
