@@ -9,13 +9,16 @@ import { parseUnits } from '@ethersproject/units'
 import NFT_selectIcon from 'src/common/svgs/NFT_selectIcon'
 import Button from '@mui/material/Button'
 import { BigNumber } from '@ethersproject/bignumber'
+import ReactLoading from 'react-loading'
 
-export const NFT_dashboard = () => {
+export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) => void }) => {
     const {
         availableRewards,
         rewardsToken,
         stakedInfo,
         unstakedInfo,
+        isLoadingStakedNFT,
+        isLoadingUnstakedNFT,
         claimCallback,
         setSelectStakedNFT,
         setSelectUnstakedNFT,
@@ -33,7 +36,7 @@ export const NFT_dashboard = () => {
     const widthRef = useRef<any>()
     const [stakingNFTs, setStakingNFTs] = useState<BigNumber[]>([])
     const [unstakingNFTs, setUnstakingNFTs] = useState<BigNumber[]>([])
-
+    
     const getBarSize = () => {
         if (widthRef) {
             const newWidth = widthRef?.current?.clientWidth - 20
@@ -154,8 +157,8 @@ export const NFT_dashboard = () => {
         return null;
     }
 
-    const onViewDetail = (tokenId: number) => {
-
+    const onViewDetail = (nft: INFTokenInfo) => {
+        setViewNFT(nft)
     }
 
     return (
@@ -198,7 +201,7 @@ export const NFT_dashboard = () => {
                     </div>
                     <div className='w-full lg:basis-1/2 flex flex-col gap-2'>
                         <div className='w-full flex lg:justify-start justify-center'>
-                            <div className='w-full lg:w-auto flex flex-col gap-1'>
+                            {!isLoadingStakedNFT && !isLoadingUnstakedNFT ? <div className='w-full lg:w-auto flex flex-col gap-1'>
                                 <div className='w-full text-[#000] text-[22px] md:text-[25px]'>
                                     {percentage}% nfts staked
                                 </div>
@@ -206,7 +209,9 @@ export const NFT_dashboard = () => {
                                     <div className={`bg-app-green h-[12px]`} style={{ minWidth: `${Math.round(percentage * barWidth / 100)}px` }} />
                                     <div className={`bg-[#37801C] w-full h-[12px]`} />
                                 </div>
-                            </div>
+                            </div> : <>
+                                <ReactLoading type={"bubbles"} color="#aaa" height='64px' width='64px' />
+                            </>}
                         </div>
                     </div>
                 </div>
@@ -214,7 +219,7 @@ export const NFT_dashboard = () => {
                     <div className='w-[50px] lg:w-full bg-app-green h-screen lg:h-[120px] absolute top-0 lg:top-[100px] left-0' />
                     <div className='w-full lg:basis-1/2' style={{ zIndex: '1', display: 'flex', flexFlow: 'column' }}>
                         <div className='text-[21px] sm:text-[24px] text-[#000] mb-1' style={{ textShadow: '2px 2px 0px #6FFF39', flex: '0 1 auto' }}>{`unStaked tokens (${unstakedInfo ? unstakedInfo.length : ''})`}</div>
-                        <div className='border-2 border-[#000] rounded-md min-h-[250px] bg-white p-4' style={{flex: '1 1 auto'}}>
+                        <div className='border-2 border-[#000] rounded-md min-h-[250px] bg-white p-4' style={{ flex: '1 1 auto' }}>
                             <LoadingButton
                                 variant="contained"
                                 sx={{ width: '100%', height: '45px', fontFamily: 'agressive', boxShadow: '3px 3px #000' }}
@@ -229,7 +234,9 @@ export const NFT_dashboard = () => {
                                     <span className='text-[12px] text-[#333] uppercase leading-[1]'>Selected NFTs</span>
                                 </div>
                             </LoadingButton>
-                            <div className='w-full flex flex-wrap gap-6 sm:gap-8 mt-4'>
+                            {isLoadingUnstakedNFT ? <>
+                                <ReactLoading type={"bubbles"} color="#aaa" height='64px' width='64px' />
+                            </> : <div className='w-full flex flex-wrap gap-6 sm:gap-8 mt-4'>
                                 {unstakedInfo && <>
                                     {unstakedInfo.map((item: INFTokenInfo, index: number) => {
                                         return (
@@ -247,7 +254,7 @@ export const NFT_dashboard = () => {
                                                     variant="contained"
                                                     sx={{ width: '100%', height: '24px', fontFamily: 'bebas', boxShadow: '2px 2px #000' }}
                                                     color="primary"
-                                                    onClick={() => onViewDetail(item.tokenId)}
+                                                    onClick={() => onViewDetail(item)}
                                                 >
                                                     <span className='text-[18px] sm:text-[20px] text-[#000000] uppercase leading-[1] uppercase'>{`View #${item.tokenId}`}</span>
                                                 </Button>
@@ -256,12 +263,12 @@ export const NFT_dashboard = () => {
                                     })}
                                 </>
                                 }
-                            </div>
+                            </div>}
                         </div>
                     </div>
                     <div className='w-full lg:basis-1/2' style={{ zIndex: '1', display: 'flex', flexFlow: 'column' }}>
                         <div className='text-[21px] sm:text-[24px] text-[#000] mb-1' style={{ textShadow: '2px 2px 0px #6FFF39', flex: '0 1 auto' }}>{`Staked tokens (${stakedInfo ? stakedInfo.amountStaked : ''})`}</div>
-                        <div className='border-2 border-[#000] rounded-md min-h-[250px] bg-white p-4' style={{flex: '1 1 auto'}}>
+                        <div className='border-2 border-[#000] rounded-md min-h-[250px] bg-white p-4' style={{ flex: '1 1 auto' }}>
                             <LoadingButton
                                 variant="contained"
                                 sx={{ width: '100%', height: '45px', fontFamily: 'agressive', boxShadow: '3px 3px #000' }}
@@ -276,7 +283,9 @@ export const NFT_dashboard = () => {
                                     <span className='text-[12px] text-[#333] uppercase leading-[1]'>Selected NFTs</span>
                                 </div>
                             </LoadingButton>
-                            <div className='w-full flex flex-wrap gap-6 sm:gap-8 mt-4'>
+                            {isLoadingStakedNFT ? <>
+                                <ReactLoading type={"bubbles"} color="#aaa" height='64px' width='64px' />
+                            </> : <div className='w-full flex flex-wrap gap-6 sm:gap-8 mt-4'>
                                 {stakedInfo && <>
                                     {stakedInfo.stakedTokens.map((item: INFTokenInfo, index: number) => {
                                         return (
@@ -294,7 +303,7 @@ export const NFT_dashboard = () => {
                                                     variant="contained"
                                                     sx={{ width: '100%', height: '24px', fontFamily: 'bebas', boxShadow: '2px 2px #000' }}
                                                     color="primary"
-                                                    onClick={() => onViewDetail(item.tokenId)}
+                                                    onClick={() => onViewDetail(item)}
                                                 >
                                                     <span className='text-[18px] sm:text-[20px] text-[#000000] uppercase leading-[1] uppercase'>{`View #${item.tokenId}`}</span>
                                                 </Button>
@@ -303,7 +312,7 @@ export const NFT_dashboard = () => {
                                     })}
                                 </>
                                 }
-                            </div>
+                            </div>}
                         </div>
                     </div>
                 </div>

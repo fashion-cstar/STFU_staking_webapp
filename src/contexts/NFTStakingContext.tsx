@@ -28,6 +28,9 @@ export interface INFTStakingContext {
     allStakedInfo: any
     blockTimestamp: number
     fetchingStatus: boolean
+    isLoadingStakedNFT: boolean
+    isLoadingUnstakedNFT: boolean
+    NFTContractOwner: string
     stakeCallback: (tokenIds: BigNumber[]) => Promise<any>
     claimCallback: () => Promise<any>
     unstakeCallback: (tokenIds: BigNumber[]) => Promise<any>
@@ -74,6 +77,9 @@ export const NFTStakingProvider = ({ children = null as any }) => {
     const [allStakedInfo, setAllStakedInfo] = useState<any>()
     const [blockTimestamp, setBlockTimestamp] = useState(0)
     const [fetchingStatus, setFetchingStatus] = useState(false)
+    const [isLoadingStakedNFT, setIsLoadingStakedNFT] = useState(false)
+    const [isLoadingUnstakedNFT, setIsLoadingUnstakedNFT] = useState(false)
+    const [NFTContractOwner, setNFTContractOwner] = useState('')
 
     useEffect(() => {
         if (nativeBalance) {
@@ -90,13 +96,13 @@ export const NFTStakingProvider = ({ children = null as any }) => {
     }, [slowRefresh, account])
 
     useEffect(() => {
-        if (account){
+        if (account) {
             updateNFTsHoldenStats()
-        }else{
+        } else {
             setStakedInfo(undefined)
             setUnstakedInfo(undefined)
         }
-    },[account])
+    }, [account])
 
     useEffect(() => {
         const fetch = async () => {
@@ -254,6 +260,17 @@ export const NFTStakingProvider = ({ children = null as any }) => {
         return { tokenContract: tokenContract, result: res }
     }
 
+    const fetchNFTContractowner = async (stakingContract: Contract) => {
+        let tokenContract: Contract = nftCollection
+        if (!tokenContract) {
+            const nftAddress = await stakingContract.nftCollection()
+            const chainId = getChainIdFromName(blockchain);
+            tokenContract = getContract(nftAddress, nft_abi, RpcProviders[chainId], account ? account : undefined)
+        }
+        const res = await tokenContract.owner()
+        return res
+    }
+
     const fetchStakedInfo = async (stakingContract: Contract) => {
         const res = await stakingContract.getStakedInfo(account)
         return res
@@ -267,6 +284,8 @@ export const NFTStakingProvider = ({ children = null as any }) => {
     const updateNFTsHoldenStats = async () => {
         const chainId = getChainIdFromName(blockchain);
         const stakingContract: Contract = getContract(NFTStakingContractAddress, nftStaking_abi, RpcProviders[chainId], account ? account : undefined)
+        setIsLoadingStakedNFT(true)
+        setIsLoadingUnstakedNFT(true)
         if (account) {
             fetchUnstakedInfo(stakingContract).then(async res => {
                 let tokenContract = res.tokenContract
@@ -278,15 +297,20 @@ export const NFTStakingProvider = ({ children = null as any }) => {
                     await Promise.all(stakedTokens.map(async (item) => {
                         try {
                             tokenURI = await tokenContract.tokenURI(Number(item.tokenId))
-                            metadata = await fetch(tokenURI).then((res) => res.json())                            
+                            metadata = await fetch(tokenURI).then((res) => res.json())
                             temp.push({ owner: item.owner, tokenId: Number(item.tokenId), tokenURI: tokenURI, metadata: metadata, isSelected: false })
                         } catch (err) { }
                     }))
                     temp.sort((a: INFTokenInfo, b: INFTokenInfo) => a.tokenId - b.tokenId)
                     setUnstakedInfo(temp)
+                    setIsLoadingUnstakedNFT(false)
                 } else {
+                    setIsLoadingUnstakedNFT(false)
                 }
-            }).catch(error => { console.log(error) })
+            }).catch(error => {
+                console.log(error)
+                setIsLoadingUnstakedNFT(false)
+            })
 
             fetchStakedInfo(stakingContract).then(async result => {
                 if (result.length > 0) {
@@ -303,16 +327,21 @@ export const NFTStakingProvider = ({ children = null as any }) => {
                     await Promise.all(stakedTokens.map(async (item) => {
                         try {
                             tokenURI = await tokenContract.tokenURI(Number(item.tokenId))
-                            metadata = await fetch(tokenURI).then((res) => res.json())                            
+                            metadata = await fetch(tokenURI).then((res) => res.json())
                             temp.push({ owner: item.staker, tokenId: Number(item.tokenId), tokenURI: tokenURI, metadata: metadata, isSelected: false })
                         } catch (err) { }
-                        temp.sort((a: INFTokenInfo, b: INFTokenInfo) => a.tokenId - b.tokenId)
-                        setStakedInfo({ amountStaked: Number(result[0]), stakedTokens: temp, timeOfLastUpdate: Number(result[2]), unclaimedRewards: result[3], rewardDebt: result[4] })
                     }))
+                    temp.sort((a: INFTokenInfo, b: INFTokenInfo) => a.tokenId - b.tokenId)
+                    setStakedInfo({ amountStaked: Number(result[0]), stakedTokens: temp, timeOfLastUpdate: Number(result[2]), unclaimedRewards: result[3], rewardDebt: result[4] })
+                    setIsLoadingStakedNFT(false)
                 } else {
                     setStakedInfo({ amountStaked: 0, stakedTokens: [], timeOfLastUpdate: 0, unclaimedRewards: BigNumber.from(0), rewardDebt: BigNumber.from(0) })
+                    setIsLoadingStakedNFT(false)
                 }
-            }).catch(error => { console.log(error) })
+            }).catch(error => {
+                console.log(error)
+                setIsLoadingStakedNFT(false)
+            })
         }
     }
 
@@ -333,6 +362,10 @@ export const NFTStakingProvider = ({ children = null as any }) => {
 
         fetchRewardsPerDay(stakingContract).then(result => {
             setRewardsPerDay(result)
+        }).catch(error => { console.log(error) })
+
+        fetchNFTContractowner(stakingContract).then(result => {
+            setNFTContractOwner(result)
         }).catch(error => { console.log(error) })
 
         fetchAllStakedInfo(stakingContract).then(result => {
@@ -378,6 +411,9 @@ export const NFTStakingProvider = ({ children = null as any }) => {
                 allStakedInfo,
                 blockTimestamp,
                 fetchingStatus,
+                isLoadingStakedNFT,
+                isLoadingUnstakedNFT,
+                NFTContractOwner,
                 stakeCallback,
                 claimCallback,
                 unstakeCallback,
