@@ -3,14 +3,15 @@ import { useEthers } from '@usedapp/core'
 import React, { useState } from 'react'
 import { useNFTStaking } from 'src/contexts/NFTStakingContext'
 import { ApprovalStaking } from './ApprovalStaking'
+import { NFT_dashboard } from './NFT_dashboard'
 
 export const NFTStaking = () => {
     const { isApprovedForAll } = useNFTStaking()
     const { account } = useEthers()
-    
+
     return (
-        <div className="w-full">
-            <div className="w-full relative pt-[53px]">
+        <div className="w-full" style={{display: 'flex', flexFlow: 'column'}}>
+            <div className="w-full relative pt-[53px]" style={{flex: '1 1 auto'}}>
                 <div className={`w-full absolute left-[0px] top-[-10px] h-[53px] bg-app-green bg-center bg-repeat-x bg-[url('./assets/nft_mobile_side.svg')] lg:bg-[url('./assets/nft_desktop_side.svg')]`}>
                 </div>
                 <div className='w-full flex flex-col xl:flex-row justify-center xl:items-end gap-2 px-8'>
@@ -31,11 +32,14 @@ export const NFTStaking = () => {
                 <div className='w-full flex justify-center mt-[1px]'>
                     <div className='w-full lg:mx-6 border border-b border-[#6FFF39]'></div>
                 </div>
-                {(!isApprovedForAll || !account) ? <ApprovalStaking />:
-                <></>}
-                <div className='h-[40px]' />
-                {/* <div className={`w-full absolute left-[0px] bottom-[-30px] h-[50px] lg:h-[30px] bg-app-green bg-center lg:bg-top bg-repeat-x bg-[url('./assets/nft_mobile_side.svg')] lg:bg-[url('./assets/nft_desktop_side.svg')]`}> */}
-                <div className={`w-full absolute lg:fixed left-[0px] bottom-[-30px] lg:bottom-[0px] h-[50px] lg:h-[30px] bg-app-green bg-center lg:bg-top bg-repeat-x bg-[url('./assets/nft_mobile_side.svg')] lg:bg-[url('./assets/nft_desktop_side.svg')]`}>
+                {(!isApprovedForAll || !account) ?
+                    <>
+                        <ApprovalStaking />
+                        <div className='h-[40px]' />
+                    </> :
+                    <NFT_dashboard />}
+                <div className={`w-full absolute left-[0px] bottom-[-30px] h-[50px] lg:h-[30px] bg-app-green bg-center lg:bg-top bg-repeat-x bg-[url('./assets/nft_mobile_side.svg')] lg:bg-[url('./assets/nft_desktop_side.svg')]`}>
+                    {/* <div className={`w-full absolute lg:fixed left-[0px] bottom-[-30px] lg:bottom-[0px] h-[50px] lg:h-[30px] bg-app-green bg-center lg:bg-top bg-repeat-x bg-[url('./assets/nft_mobile_side.svg')] lg:bg-[url('./assets/nft_desktop_side.svg')]`}> */}
                 </div>
             </div>
         </div>

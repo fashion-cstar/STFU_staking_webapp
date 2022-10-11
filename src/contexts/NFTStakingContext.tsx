@@ -28,11 +28,14 @@ export interface INFTStakingContext {
     allStakedInfo: any
     blockTimestamp: number
     fetchingStatus: boolean
-    stakeCallback: (tokenId: BigNumber) => Promise<any>
+    stakeCallback: (tokenIds: BigNumber[]) => Promise<any>
     claimCallback: () => Promise<any>
-    unstakeCallback: (tokenId: BigNumber) => Promise<any>
+    unstakeCallback: (tokenIds: BigNumber[]) => Promise<any>
     setApprovalForAllCallback: () => Promise<any>
+    updateNFTsHoldenStats: () => void
     updateStakingStats: () => void
+    setSelectStakedNFT: (index: number, isSelected: boolean) => void
+    setSelectUnstakedNFT: (index: number, isSelected: boolean) => void
 }
 
 export interface INFTokenInfo {
@@ -40,6 +43,7 @@ export interface INFTokenInfo {
     tokenId: number
     tokenURI: string
     metadata: any
+    isSelected: boolean
 }
 
 export interface INFTStakedInfo {
@@ -86,6 +90,15 @@ export const NFTStakingProvider = ({ children = null as any }) => {
     }, [slowRefresh, account])
 
     useEffect(() => {
+        if (account){
+            updateNFTsHoldenStats()
+        }else{
+            setStakedInfo(undefined)
+            setUnstakedInfo(undefined)
+        }
+    },[account])
+
+    useEffect(() => {
         const fetch = async () => {
             const chainId = getChainIdFromName(blockchain)
             let blocknumber = await RpcProviders[chainId].getBlockNumber()
@@ -102,12 +115,12 @@ export const NFTStakingProvider = ({ children = null as any }) => {
         }
     }, [account])
 
-    const stakeCallback = async function (tokenId: BigNumber) {
+    const stakeCallback = async function (tokenIds: BigNumber[]) {
         if (!account || !library || !NFTStakingContractAddress) return
         const stakingContract: Contract = getContract(NFTStakingContractAddress, nftStaking_abi, library, account ? account : undefined)
-        return stakingContract.estimateGas.stake(tokenId).then(estimatedGasLimit => {
+        return stakingContract.estimateGas.stake(tokenIds).then(estimatedGasLimit => {
             const gas = estimatedGasLimit
-            return stakingContract.stake(tokenId, {
+            return stakingContract.stake(tokenIds, {
                 gasLimit: calculateGasMargin(gas)
             }).then((response: TransactionResponse) => {
                 return response.wait().then((res: any) => {
@@ -132,12 +145,12 @@ export const NFTStakingProvider = ({ children = null as any }) => {
         })
     }
 
-    const unstakeCallback = async function (tokenId: BigNumber) {
+    const unstakeCallback = async function (tokenIds: BigNumber[]) {
         if (!account || !library || !NFTStakingContractAddress) return
         const stakingContract: Contract = getContract(NFTStakingContractAddress, nftStaking_abi, library, account ? account : undefined)
-        return stakingContract.estimateGas.unstake(tokenId).then(estimatedGasLimit => {
+        return stakingContract.estimateGas.unstake(tokenIds).then(estimatedGasLimit => {
             const gas = estimatedGasLimit
-            return stakingContract.unstake(tokenId, {
+            return stakingContract.unstake(tokenIds, {
                 gasLimit: calculateGasMargin(gas)
             }).then((response: TransactionResponse) => {
                 return response.wait().then((res: any) => {
@@ -162,6 +175,32 @@ export const NFTStakingProvider = ({ children = null as any }) => {
                 })
             })
         })
+    }
+
+    const setSelectStakedNFT = (index: number, isSelected: boolean) => {
+        let items: INFTokenInfo[] = [...stakedInfo.stakedTokens]
+        for (let i = 0; i < items.length; i++) {
+            if (index === i) {
+                let item = items[i]
+                item.isSelected = isSelected
+                items[i] = item
+                break
+            }
+        }
+        setStakedInfo((item) => ({ ...item, stakedTokens: items }))
+    }
+
+    const setSelectUnstakedNFT = (index: number, isSelected: boolean) => {
+        let items: INFTokenInfo[] = [...unstakedInfo]
+        for (let i = 0; i < items.length; i++) {
+            if (index === i) {
+                let item = items[i]
+                item.isSelected = isSelected
+                items[i] = item
+                break
+            }
+        }
+        setUnstakedInfo(items)
     }
 
     const fetchRewardsToken = async (stakingContract: Contract) => {
@@ -225,6 +264,58 @@ export const NFTStakingProvider = ({ children = null as any }) => {
         return res
     }
 
+    const updateNFTsHoldenStats = async () => {
+        const chainId = getChainIdFromName(blockchain);
+        const stakingContract: Contract = getContract(NFTStakingContractAddress, nftStaking_abi, RpcProviders[chainId], account ? account : undefined)
+        if (account) {
+            fetchUnstakedInfo(stakingContract).then(async res => {
+                let tokenContract = res.tokenContract
+                let stakedTokens = res.result[1]
+                if (stakedTokens.length > 0) {
+                    let temp: INFTokenInfo[] = []
+                    let tokenURI = ""
+                    let metadata: any
+                    await Promise.all(stakedTokens.map(async (item) => {
+                        try {
+                            tokenURI = await tokenContract.tokenURI(Number(item.tokenId))
+                            metadata = await fetch(tokenURI).then((res) => res.json())                            
+                            temp.push({ owner: item.owner, tokenId: Number(item.tokenId), tokenURI: tokenURI, metadata: metadata, isSelected: false })
+                        } catch (err) { }
+                    }))
+                    temp.sort((a: INFTokenInfo, b: INFTokenInfo) => a.tokenId - b.tokenId)
+                    setUnstakedInfo(temp)
+                } else {
+                }
+            }).catch(error => { console.log(error) })
+
+            fetchStakedInfo(stakingContract).then(async result => {
+                if (result.length > 0) {
+                    let temp: INFTokenInfo[] = []
+                    let stakedTokens = result[1]
+                    let tokenContract: Contract = nftCollection
+                    if (!tokenContract) {
+                        const nftAddress = await stakingContract.nftCollection()
+                        const chainId = getChainIdFromName(blockchain);
+                        tokenContract = getContract(nftAddress, nft_abi, RpcProviders[chainId], account ? account : undefined)
+                    }
+                    let tokenURI = ""
+                    let metadata: any
+                    await Promise.all(stakedTokens.map(async (item) => {
+                        try {
+                            tokenURI = await tokenContract.tokenURI(Number(item.tokenId))
+                            metadata = await fetch(tokenURI).then((res) => res.json())                            
+                            temp.push({ owner: item.staker, tokenId: Number(item.tokenId), tokenURI: tokenURI, metadata: metadata, isSelected: false })
+                        } catch (err) { }
+                        temp.sort((a: INFTokenInfo, b: INFTokenInfo) => a.tokenId - b.tokenId)
+                        setStakedInfo({ amountStaked: Number(result[0]), stakedTokens: temp, timeOfLastUpdate: Number(result[2]), unclaimedRewards: result[3], rewardDebt: result[4] })
+                    }))
+                } else {
+                    setStakedInfo({ amountStaked: 0, stakedTokens: [], timeOfLastUpdate: 0, unclaimedRewards: BigNumber.from(0), rewardDebt: BigNumber.from(0) })
+                }
+            }).catch(error => { console.log(error) })
+        }
+    }
+
     const updateStakingStats = async () => {
         const chainId = getChainIdFromName(blockchain);
         const stakingContract: Contract = getContract(NFTStakingContractAddress, nftStaking_abi, RpcProviders[chainId], account ? account : undefined)
@@ -256,50 +347,6 @@ export const NFTStakingProvider = ({ children = null as any }) => {
 
             fetchAvailableRewards(stakingContract).then(result => {
                 setAvailableRewards(result)
-            }).catch(error => { console.log(error) })
-
-            fetchUnstakedInfo(stakingContract).then(async res => {
-                let tokenContract = res.tokenContract
-                let stakedTokens = res.result[1]
-                if (stakedTokens.length > 0) {
-                    let temp: INFTokenInfo[] = []
-                    let tokenURI = ""
-                    let metadata: any
-                    await Promise.all(stakedTokens.map(async (item) => {
-                        try {
-                            tokenURI = await tokenContract.tokenURI(Number(item.tokenId))
-                            metadata = await fetch(tokenURI).then((res) => res.json())
-                            temp.push({ owner: item.owner, tokenId: Number(item.tokenId), tokenURI: tokenURI, metadata: metadata })
-                            setUnstakedInfo(temp)
-                        } catch (err) { }
-                    }))
-                } else {
-                }
-            }).catch(error => { console.log(error) })
-
-            fetchStakedInfo(stakingContract).then(async result => {
-                if (result.length > 0) {
-                    let temp: INFTokenInfo[] = []
-                    let stakedTokens = result[1]
-                    let tokenContract: Contract = nftCollection
-                    if (!tokenContract) {
-                        const nftAddress = await stakingContract.nftCollection()
-                        const chainId = getChainIdFromName(blockchain);
-                        tokenContract = getContract(nftAddress, nft_abi, RpcProviders[chainId], account ? account : undefined)
-                    }
-                    let tokenURI = ""
-                    let metadata: any
-                    await Promise.all(stakedTokens.map(async (item) => {
-                        try {
-                            tokenURI = await tokenContract.tokenURI(Number(item.tokenId))
-                            metadata = await fetch(tokenURI).then((res) => res.json())
-                            temp.push({ owner: item.staker, tokenId: Number(item.tokenId), tokenURI: tokenURI, metadata: metadata })
-                            setStakedInfo({ amountStaked: Number(result[0]), stakedTokens: temp, timeOfLastUpdate: Number(result[2]), unclaimedRewards: result[3], rewardDebt: result[4] })
-                        } catch (err) { }
-                    }))
-                } else {
-                    setStakedInfo({ amountStaked: 0, stakedTokens: [], timeOfLastUpdate: 0, unclaimedRewards: BigNumber.from(0), rewardDebt: BigNumber.from(0) })
-                }
             }).catch(error => { console.log(error) })
         }
 
@@ -335,7 +382,10 @@ export const NFTStakingProvider = ({ children = null as any }) => {
                 claimCallback,
                 unstakeCallback,
                 setApprovalForAllCallback,
+                updateNFTsHoldenStats,
                 updateStakingStats,
+                setSelectStakedNFT,
+                setSelectUnstakedNFT
             }}
         >
             {children}

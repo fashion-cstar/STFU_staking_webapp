@@ -13,7 +13,7 @@ const theme = createTheme({
       main: colors.app.primary,
     },
     secondary: {
-      main: "hsla(210, 19.2%, 20.4%, 1)",
+      main: colors.app.secondary,
     },
     common: {
       black: "hsla(206, 10.1%, 13.5%, 1)"
