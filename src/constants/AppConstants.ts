@@ -47,7 +47,8 @@ export const Rpc_URLS: { [chainId in ChainId]?: string } = {
     [ChainId.Mainnet]: 'https://mainnet.infura.io/v3/b6a2f439eeb57f2c3c4334a6/eth/mainnet',
     [ChainId.Rinkeby]: 'https://rinkeby.infura.io/v3/b6a2f439eeb57f2c3c4334a6/eth/rinkeby',
     [ChainId.BSC]: 'https://bsc-dataseed.binance.org',
-    [ChainId.BSCTestnet]: 'https://data-seed-prebsc-1-s1.binance.org:8545'    
+    // [ChainId.BSCTestnet]: 'https://data-seed-prebsc-1-s1.binance.org:8545'
+    [ChainId.BSCTestnet]: 'https://bsc.getblock.io/testnet/?api_key=61e238e9-60a0-461e-925e-7ca0a942ba30'       
 }
 
 export const RpcProviders: { [chainId in ChainId]?: JsonRpcProvider } = {
@@ -72,7 +73,7 @@ export const NFTContractAddress = "0xA9345DabCc96D57ed48a0C69b54D465774dAa43D"
 // export const AppTokenAddress = "0x1e0e0DA973D852fF5C730f13790a754C67f97eeD"
 // export const StakingContractAddress = "0x7ea4Cb15Dc56C71DaC1481827bEDb0E6fD52C8Cf"
 // export const StakingContractAddressV2 = "0x7ea4Cb15Dc56C71DaC1481827bEDb0E6fD52C8Cf"
-// export const NFTStakingContractAddress ="0x2b734d7fBB892a688C633FbeDC4dB5907B818ed3"
+// export const NFTStakingContractAddress = "0x2b734d7fBB892a688C633FbeDC4dB5907B818ed3"
 // export const NFTContractAddress = "0xc32E7684C201198b4Db48C66839df97f617bE949"
 
 export const BUY_STFU_URL = 'https://pancakeswap.finance/swap?outputCurrency=' + AppTokenAddress

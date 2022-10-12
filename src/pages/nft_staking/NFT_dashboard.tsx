@@ -36,7 +36,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
     const widthRef = useRef<any>()
     const [stakingNFTs, setStakingNFTs] = useState<BigNumber[]>([])
     const [unstakingNFTs, setUnstakingNFTs] = useState<BigNumber[]>([])
-    
+
     const getBarSize = () => {
         if (widthRef) {
             const newWidth = widthRef?.current?.clientWidth - 20
@@ -238,7 +238,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                                 <ReactLoading type={"bubbles"} color="#aaa" height='64px' width='64px' />
                             </> : <div className='w-full flex flex-wrap gap-6 sm:gap-8 mt-4'>
                                 {unstakedInfo && <>
-                                    {unstakedInfo.map((item: INFTokenInfo, index: number) => {
+                                    {unstakedInfo.length > 0 ? <>{unstakedInfo.map((item: INFTokenInfo, index: number) => {
                                         return (
                                             <div className='w-full flex flex-col gap-1 w-[100px] sm:w-[120px] lg:w-[140px]' key={index}>
                                                 <div className={`${item.isSelected ? 'border-2 border-[#6FFF39]' : 'border border-[#222]'} shadow-lg relative hover:scale-[1.032] cursor-pointer`}
@@ -261,6 +261,11 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                                             </div>
                                         )
                                     })}
+                                    </> : <>
+                                        <p className="text-[14px] sm:text-[16px] text-center text-[#000]" style={{ fontFamily: 'bebas' }}>
+                                            No unstaked NFTs found in your wallet
+                                        </p>
+                                    </>}
                                 </>
                                 }
                             </div>}
@@ -287,7 +292,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                                 <ReactLoading type={"bubbles"} color="#aaa" height='64px' width='64px' />
                             </> : <div className='w-full flex flex-wrap gap-6 sm:gap-8 mt-4'>
                                 {stakedInfo && <>
-                                    {stakedInfo.stakedTokens.map((item: INFTokenInfo, index: number) => {
+                                    {stakedInfo.stakedTokens.length > 0 ? <>{stakedInfo.stakedTokens.map((item: INFTokenInfo, index: number) => {
                                         return (
                                             <div className='w-full flex flex-col gap-1 w-[100px] sm:w-[120px] lg:w-[140px]' key={index}>
                                                 <div className={`${item.isSelected ? 'border-2 border-[#6FFF39]' : 'border border-[#222]'} shadow-lg relative hover:scale-[1.032] cursor-pointer`}
@@ -309,7 +314,11 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                                                 </Button>
                                             </div>
                                         )
-                                    })}
+                                    })}</> : <>
+                                        <p className="text-[14px] sm:text-[16px] text-center text-[#000]" style={{ fontFamily: 'bebas' }}>
+                                            You are currently not staking any NFTs.
+                                        </p>
+                                    </>}
                                 </>
                                 }
                             </div>}

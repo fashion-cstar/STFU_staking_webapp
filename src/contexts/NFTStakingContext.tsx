@@ -305,6 +305,7 @@ export const NFTStakingProvider = ({ children = null as any }) => {
                     setUnstakedInfo(temp)
                     setIsLoadingUnstakedNFT(false)
                 } else {
+                    setUnstakedInfo([])
                     setIsLoadingUnstakedNFT(false)
                 }
             }).catch(error => {
