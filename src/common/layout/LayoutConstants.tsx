@@ -4,10 +4,10 @@ export enum SidebarItem {
   HOME
 }
 
-export const SIDEBAR_ROUTES: { [key: string]: string } = {
-  [SidebarItem.STFU_STAKING]: "/staking",
-  [SidebarItem.NFT_STAKING]: "/nft_staking",
-  [SidebarItem.HOME]: "/stfulabs.com/"
+export const SIDEBAR_ROUTES: { [key: string]: {type:string, link:string} } = {
+  [SidebarItem.STFU_STAKING]: {type: "internal", link: "/staking"},
+  [SidebarItem.NFT_STAKING]: {type: "internal", link: "/nft_staking"},
+  [SidebarItem.HOME]: {type: "external", link: "https://stfulabs.com"}
 };
 
 export const SIDEBAR_ITEMS: { [key: string]: string } = {

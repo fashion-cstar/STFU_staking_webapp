@@ -29,8 +29,8 @@ export default function Header() {
     return (
       <div className='flex gap-8 lg:gap-10 mx-8 mt-2'>
         {Object.keys(SIDEBAR_ITEMS).map((key, index) => {
-          const isActive = routeMatch(SIDEBAR_ROUTES[key])
-          const isComingSoon = SIDEBAR_ROUTES[key] === "/coming-soon"
+          const isActive = routeMatch(SIDEBAR_ROUTES[key].link)
+          const isComingSoon = SIDEBAR_ROUTES[key].link === "/coming-soon"
           return (
             <div key={key}>
               <Tooltip
@@ -41,10 +41,18 @@ export default function Header() {
                 }
                 placement="bottom"
               >
-                {!isActive ? <Link to={SIDEBAR_ROUTES[key]}>
-                  <span className='text-[20px] text-white font-medium'>{SIDEBAR_ITEMS[key]}</span>
-                  <div className={`bg-app-purple h-0.5 w-full ${isActive ? 'block' : 'hidden'}`}></div>
-                </Link> :
+                {!isActive ?
+                  <>
+                    {SIDEBAR_ROUTES[key].type === "external" ?
+                      <a href={SIDEBAR_ROUTES[key].link} target="_blank" rel="noreferrer">
+                        <span className='text-[20px] text-white font-medium'>{SIDEBAR_ITEMS[key]}</span>
+                        <div className={`bg-app-purple h-0.5 w-full ${isActive ? 'block' : 'hidden'}`}></div>
+                      </a> :
+                      <Link to={SIDEBAR_ROUTES[key].link}>
+                        <span className='text-[20px] text-white font-medium'>{SIDEBAR_ITEMS[key]}</span>
+                        <div className={`bg-app-purple h-0.5 w-full ${isActive ? 'block' : 'hidden'}`}></div>
+                      </Link>}
+                  </> :
                   <div>
                     <span className='text-[20px] text-white font-medium'>{SIDEBAR_ITEMS[key]}</span>
                     <div className={`bg-app-purple h-0.5 w-full 'block'`}></div>
@@ -69,8 +77,8 @@ export default function Header() {
       <div className={`w-full mt-4 pt-6 pb-2 px-16 ${isNavOpen ? 'block' : 'hidden'}`}>
         <div className='flex flex-col gap-5'>
           {Object.keys(SIDEBAR_ITEMS).map((key, index) => {
-            const isActive = routeMatch(SIDEBAR_ROUTES[key])
-            const isComingSoon = SIDEBAR_ROUTES[key] === "/coming-soon"
+            const isActive = routeMatch(SIDEBAR_ROUTES[key].link)
+            const isComingSoon = SIDEBAR_ROUTES[key].link === "/coming-soon"
             return (
               <div key={key}>
                 <Tooltip
@@ -80,10 +88,17 @@ export default function Header() {
                       : SIDEBAR_ITEMS[key]
                   }
                   placement="bottom"
-                >    
-                  {!isActive ? <Link to={SIDEBAR_ROUTES[key]}>
-                    <span className={`text-[18px] ${isActive ? 'text-app-purple' : 'text-white'} text-white font-medium`}>{SIDEBAR_ITEMS[key]}</span>
-                  </Link> :
+                >
+                  {!isActive ?
+                    <>
+                      {SIDEBAR_ROUTES[key].type === "external" ?
+                        <a href={SIDEBAR_ROUTES[key].link} target="_blank" rel="noreferrer">
+                          <span className={`text-[18px] ${isActive ? 'text-app-purple' : 'text-white'} text-white font-medium`}>{SIDEBAR_ITEMS[key]}</span>
+                        </a> :
+                        <Link to={SIDEBAR_ROUTES[key].link}>
+                          <span className={`text-[18px] ${isActive ? 'text-app-purple' : 'text-white'} text-white font-medium`}>{SIDEBAR_ITEMS[key]}</span>
+                        </Link>}
+                    </> :
                     <div>
                       <span className={`text-[18px] ${isActive ? 'text-app-purple' : 'text-white'} text-white font-medium`}>{SIDEBAR_ITEMS[key]}</span>
                     </div>
