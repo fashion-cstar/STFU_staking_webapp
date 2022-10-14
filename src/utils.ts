@@ -7,7 +7,7 @@ import { getAddress } from '@ethersproject/address'
 import { ChainId } from "@usedapp/core";
 import { RpcProviders } from 'src/constants/AppConstants'
 
-export var network='mainnet'
+export var network = 'mainnet'
 // export var network='testnet'
 
 enum NETWORK_NAME {
@@ -240,10 +240,7 @@ export const getShortDateTime_ = (d: Date): string => {
 export const getShortenAmount = (amount: number, fixed: number): string => {
     let res = amount
     let unit = ''
-    if (amount >= 1000000000) {
-        res = amount / 1000000000
-        unit = 'B'
-    } else if (amount >= 1000000) {
+    if (amount >= 1000000) {
         res = amount / 1000000
         unit = 'M'
     } else if (amount >= 1000) {
@@ -251,6 +248,33 @@ export const getShortenAmount = (amount: number, fixed: number): string => {
         unit = 'K'
     }
     return res.toFixed(getFixedDecimals(res, fixed)) + unit
+}
+
+export const floatToFixedNumber = (n: string) => {
+    if (Math.floor(Number(n)) === Number(n)) return Number(n).toString()
+    let index = n.length
+    for (let i = n.length - 1; i >= 0; i--) {
+        if (n.substring(i, i + 1) !== '0') {
+            index = i
+            break;
+        }
+    }
+    return n.substring(0, index + 1)
+}
+
+export const getZeroCountFromTinyAmount = (n: any, fixedAfterLastZero: number) => {
+    let num = Number(n)
+    console.log(num, n)    
+    if (num >= 0.001) {        
+        return {reduced: false, zerocount: 0, suffixValue: floatToFixedNumber(num.toFixed(getFixedDecimals(num, fixedAfterLastZero)))}
+    }else{
+        for (let i = -1; i >= -18; i--) {
+            if (num >= Math.pow(10, i)) {                
+                return {reduced: true, zerocount: Math.abs(i)-1, suffixValue: (num * Math.pow(10, Math.abs(i)-1+fixedAfterLastZero)).toFixed(0)}
+            }
+        }
+    }
+    return {reduced: false, zerocount: 0, suffixValue: '0'}
 }
 
 export const maxStakingAmount = 1000000000

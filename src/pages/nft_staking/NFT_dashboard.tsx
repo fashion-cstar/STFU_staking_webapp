@@ -3,7 +3,7 @@ import { useEthers } from '@usedapp/core'
 import React, { useEffect, useRef, useState } from 'react'
 import { INFTokenInfo, useNFTStaking } from 'src/contexts/NFTStakingContext'
 import { toast } from 'react-toastify'
-import { formatEther, shortenAddress } from 'src/utils'
+import { formatEther, getZeroCountFromTinyAmount, shortenAddress } from 'src/utils'
 import STFU_image from 'src/common/svgs/STFU_image'
 import { parseUnits } from '@ethersproject/units'
 import NFT_selectIcon from 'src/common/svgs/NFT_selectIcon'
@@ -50,11 +50,10 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
         window.addEventListener("resize", getBarSize)
     })
 
-
     useEffect(() => {
         if (stakedInfo && unstakedInfo) {
             let totalNFTs = stakedInfo.amountStaked + unstakedInfo.length
-            setPercentage(totalNFTs <= 0 ? 0 : Math.round(stakedInfo.amountStaked / totalNFTs * 10000) / 100)            
+            setPercentage(totalNFTs <= 0 ? 0 : Math.round(stakedInfo.amountStaked / totalNFTs * 10000) / 100)
         }
     }, [stakedInfo, unstakedInfo])
 
@@ -161,6 +160,44 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
         setViewNFT(nft)
     }
 
+    const displayClaimableRewards = () => {
+        if (rewardsToken) {
+            const res = getZeroCountFromTinyAmount(formatEther(availableRewards, rewardsToken.decimals, rewardsToken.decimals, false), 3)            
+            if (res.reduced) {
+                return (
+                    <span className='text-app-purple'>{'0.0'}<span className='text-[12px]'>{res.zerocount}</span>{res.suffixValue}{' '}{rewardsToken.symbol}</span>
+                )
+            }else{
+                return (
+                    <span className='text-app-purple'>{res.suffixValue}{' '}{rewardsToken.symbol}</span>
+                )
+            }            
+        }else{
+            return (
+                <span className='text-app-purple'></span>
+            )
+        }
+    }
+
+    const displayTotalEarned = () => {
+        if (stakedInfo && rewardsToken) {
+            const res = getZeroCountFromTinyAmount(formatEther(stakedInfo.rewardDebt, rewardsToken.decimals, rewardsToken.decimals, false), 3)            
+            if (res.reduced) {
+                return (
+                    <span className='text-app-purple'>{'0.0'}<span className='text-[12px]'>{res.zerocount}</span>{res.suffixValue}{' '}{rewardsToken.symbol}</span>
+                )
+            }else{
+                return (
+                    <span className='text-app-purple'>{res.suffixValue}{' '}{rewardsToken.symbol}</span>
+                )
+            }            
+        }else{
+            return (
+                <span className='text-app-purple'></span>
+            )
+        }
+    }
+
     return (
         <>
             <div className='w-full flex flex-col gap-2 mt-8'>
@@ -174,10 +211,10 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                                         Account{`: `}<span>{account ? shortenAddress(account, 3) : ''}</span>
                                     </div>
                                     <div className='text-[22px] md:text-[25px] text-[#000] font-semibold leading-[1.1] lg:leading-[1.4]' style={{ fontFamily: 'bebas' }}>
-                                        claimable rewards:{` `}<span className='text-app-purple'>{rewardsToken ? formatEther(availableRewards, rewardsToken.decimals, 3, true) + ' ' + rewardsToken.symbol : ''}</span>
+                                        claimable rewards:{` `}{displayClaimableRewards()}
                                     </div>
                                     <div className='hidden lg:block text-[18px] md:text-[20px] text-[#000] font-semibold leading-[1.1] lg:leading-[1.4]' style={{ fontFamily: 'bebas' }}>
-                                        total earned:{` `}<span className='text-app-purple'>{stakedInfo && rewardsToken ? formatEther(stakedInfo.rewardDebt, rewardsToken.decimals, 3, true) + ' ' + rewardsToken.symbol : ''}</span>
+                                        total earned:{` `}{displayTotalEarned()}
                                     </div>
                                     {rewardsToken && <div className={`w-full ${isClaiming ? 'lg:w-[230px]' : 'lg:w-[190px]'} mt-1 lg:mt-2`}>
                                         <LoadingButton
@@ -187,13 +224,13 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                                             loadingPosition="start"
                                             color="primary"
                                             onClick={onClaim}
-                                            disabled={!account || !availableRewards.gt(parseUnits('0.001', rewardsToken.decimals))}
+                                            disabled={!account || !availableRewards.gt(BigNumber.from(0))}
                                         >
                                             <span className='text-[25px] text-[#000000] uppercase leading-[1]'>{isClaiming ? 'Claiming ...' : 'Claim'}</span>
                                         </LoadingButton>
                                     </div>}
                                     <div className='lg:hidden mt-1 text-[18px] md:text-[20px] text-[#000] font-semibold' style={{ fontFamily: 'bebas' }}>
-                                        total earned:{` `}<span className='text-app-purple'>{stakedInfo && rewardsToken ? formatEther(stakedInfo.rewardDebt, rewardsToken.decimals, 3, true) + ' ' + rewardsToken.symbol : ''}</span>
+                                        total earned:{` `}{displayTotalEarned()}
                                     </div>
                                 </div>
                             </div>
