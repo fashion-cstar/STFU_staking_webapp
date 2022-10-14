@@ -369,7 +369,7 @@ export const NFTStakingProvider = ({ children = null as any }) => {
             setNFTContractOwner(result)
         }).catch(error => { console.log(error) })
 
-        fetchAllStakedInfo(stakingContract).then(result => {
+        fetchAllStakedInfo(stakingContract).then(result => {            
             setAllStakedInfo(result)
         }).catch(error => { console.log(error) })
 

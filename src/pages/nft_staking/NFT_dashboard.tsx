@@ -48,13 +48,13 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
         const newWidth = widthRef?.current?.clientWidth - 20
         setBarWidth(newWidth < 0 ? 0 : newWidth)
         window.addEventListener("resize", getBarSize)
-    }, [widthRef])
+    })
 
 
     useEffect(() => {
         if (stakedInfo && unstakedInfo) {
             let totalNFTs = stakedInfo.amountStaked + unstakedInfo.length
-            setPercentage(totalNFTs <= 0 ? 0 : Math.round(stakedInfo.amountStaked / totalNFTs * 10000) / 100)
+            setPercentage(totalNFTs <= 0 ? 0 : Math.round(stakedInfo.amountStaked / totalNFTs * 10000) / 100)            
         }
     }, [stakedInfo, unstakedInfo])
 
