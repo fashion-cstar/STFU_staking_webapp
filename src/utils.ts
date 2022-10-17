@@ -171,13 +171,17 @@ const wbnbOnBSC = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
 const wethOnEthereum = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
 const wmaticOnPolygon = "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"
 export const isWrappedEther = (blockchain: string, address: string) => {
-    switch (blockchain) {
-        case NETWORK_NAME.BSC:
-            return (address.toLowerCase() === wbnbOnBSC.toLowerCase())
-        case NETWORK_NAME.Ethereum:
-            return (address.toLowerCase() === wethOnEthereum.toLowerCase())
-        case NETWORK_NAME.Polygon:
-            return (address.toLowerCase() === wmaticOnPolygon.toLowerCase())
+    if (address) {
+        switch (blockchain) {
+            case NETWORK_NAME.BSC:
+                return (address.toLowerCase() === wbnbOnBSC.toLowerCase())
+            case NETWORK_NAME.Ethereum:
+                return (address.toLowerCase() === wethOnEthereum.toLowerCase())
+            case NETWORK_NAME.Polygon:
+                return (address.toLowerCase() === wmaticOnPolygon.toLowerCase())
+        }
+    }else{
+        return false
     }
 }
 
@@ -267,17 +271,17 @@ export const floatToFixedNumber = (n: string) => {
 
 export const getZeroCountFromTinyAmount = (n: any, fixedAfterLastZero: number) => {
     let num = Number(n)
-    console.log(num, n)    
-    if (num >= 0.001) {        
-        return {reduced: false, zerocount: 0, suffixValue: floatToFixedNumber(num.toFixed(getFixedDecimals(num, fixedAfterLastZero)))}
-    }else{
+    console.log(num, n)
+    if (num >= 0.001) {
+        return { reduced: false, zerocount: 0, suffixValue: floatToFixedNumber(num.toFixed(getFixedDecimals(num, fixedAfterLastZero))) }
+    } else {
         for (let i = -1; i >= -18; i--) {
-            if (num >= Math.pow(10, i)) {                
-                return {reduced: true, zerocount: Math.abs(i)-1, suffixValue: (num * Math.pow(10, Math.abs(i)-1+fixedAfterLastZero)).toFixed(0)}
+            if (num >= Math.pow(10, i)) {
+                return { reduced: true, zerocount: Math.abs(i) - 1, suffixValue: (num * Math.pow(10, Math.abs(i) - 1 + fixedAfterLastZero)).toFixed(0) }
             }
         }
     }
-    return {reduced: false, zerocount: 0, suffixValue: '0'}
+    return { reduced: false, zerocount: 0, suffixValue: '0' }
 }
 
 export const maxStakingAmount = 1000000000
