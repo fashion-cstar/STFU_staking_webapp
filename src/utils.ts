@@ -167,14 +167,17 @@ export const getNativeSymbol = (name: string): string => {
     return symbol
 }
 
-export const isNativeCoin = (blockchain: string, symbol: string) => {
+const wbnbOnBSC = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+const wethOnEthereum = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+const wmaticOnPolygon = "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"
+export const isWrappedEther = (blockchain: string, address: string) => {
     switch (blockchain) {
         case NETWORK_NAME.BSC:
-            return (symbol.toLowerCase().indexOf('bnb') >= 0)
+            return (address.toLowerCase() === wbnbOnBSC.toLowerCase())
         case NETWORK_NAME.Ethereum:
-            return (symbol.toLowerCase().indexOf('eth') >= 0)
+            return (address.toLowerCase() === wethOnEthereum.toLowerCase())
         case NETWORK_NAME.Polygon:
-            return (symbol.toLowerCase().indexOf('matic') >= 0)
+            return (address.toLowerCase() === wmaticOnPolygon.toLowerCase())
     }
 }
 
