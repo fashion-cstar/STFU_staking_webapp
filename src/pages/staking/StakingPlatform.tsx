@@ -61,7 +61,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                 setIsClaiming(false)
                 console.log(error)
                 let err: any = error
-                toast.error((err.data?.message || err?.message || err).toString())
+                toast.error((err?.code || err.data?.message || err?.message || err).toString())
             })
         } catch (error) {
             setIsClaiming(false)
@@ -85,7 +85,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                 setIsUnstaking(false)
                 console.log(error)
                 let err: any = error
-                toast.error((err.data?.message || err?.message || err).toString())
+                toast.error((err?.code || err.data?.message || err?.message || err).toString())
             })
         } catch (error) {
             setIsUnstaking(false)
@@ -109,7 +109,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                 setIsClaimingV2(false)
                 console.log(error)
                 let err: any = error
-                toast.error((err.data?.message || err?.message || err).toString())
+                toast.error((err?.code || err.data?.message || err?.message || err).toString())
             })
         } catch (error) {
             setIsClaimingV2(false)
@@ -133,7 +133,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                 setIsUnstakingV2(false)
                 console.log(error)
                 let err: any = error
-                toast.error((err.data?.message || err?.message || err).toString())
+                toast.error((err?.code || err.data?.message || err?.message || err).toString())
             })
         } catch (error) {
             setIsUnstakingV2(false)

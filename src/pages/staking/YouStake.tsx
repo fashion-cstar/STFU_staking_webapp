@@ -40,7 +40,7 @@ export const YourStake = ({ stakingVersion }: { stakingVersion: number }) => {
                 setIsManualCompounding(false)
                 console.log(error)
                 let err: any = error
-                toast.error((err.data?.message || err?.message || err).toString())
+                toast.error((err?.code || err.data?.message || err?.message || err).toString())
             })
         } catch (error) {
             setIsManualCompounding(false)

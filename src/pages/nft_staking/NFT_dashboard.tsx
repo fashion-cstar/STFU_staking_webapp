@@ -97,7 +97,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                 console.log(error)
                 setIsClaiming(false)
                 let err: any = error
-                toast.error((err.data?.message || err?.message || err).toString())
+                toast.error((err?.code || err.data?.message || err?.message || err).toString())
             })
         } catch (error) {
             console.log(error)
@@ -122,7 +122,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                 console.log(error)
                 setIsStaking(false)
                 let err: any = error
-                toast.error((err.data?.message || err?.message || err).toString())
+                toast.error((err?.code || err.data?.message || err?.message || err).toString())
             })
         } catch (error) {
             console.log(error)
@@ -147,7 +147,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                 console.log(error)
                 setIsUnstaking(false)
                 let err: any = error
-                toast.error((err.data?.message || err?.message || err).toString())
+                toast.error((err?.code || err.data?.message || err?.message || err).toString())
             })
         } catch (error) {
             console.log(error)

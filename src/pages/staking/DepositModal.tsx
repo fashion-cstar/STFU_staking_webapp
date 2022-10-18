@@ -107,7 +107,7 @@ export default function DepositModal({ isOpen, handleClose }: ModalProps) {
                     console.log(error)
                     setIsWalletApproving(false)
                     let err: any = error
-                    toast.error((err.data?.message || err?.message || err).toString())
+                    toast.error((err?.code || err.data?.message || err?.message || err).toString())
                 })
             } catch (error) {
                 console.log(error)
@@ -137,7 +137,7 @@ export default function DepositModal({ isOpen, handleClose }: ModalProps) {
                 setIsLoading(false)
                 console.log(error)
                 let err: any = error
-                toast.error((err.data?.message || err?.message || err).toString())
+                toast.error((err?.code || err.data?.message || err?.message || err).toString())
             })
         } catch (error) {
             setIsLoading(false)
