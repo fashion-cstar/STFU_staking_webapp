@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import Wallet from 'src/common/Wallet'
 import { useNFTStaking } from 'src/contexts/NFTStakingContext'
 import { toast } from 'react-toastify'
+import { decodeTxErrorMessage } from 'src/utils'
 
 export const ApprovalStaking = () => {
     const { isApprovedForAll, fetchingStatus, setApprovalForAllCallback, updateStakingStats } = useNFTStaking()
@@ -25,7 +26,7 @@ export const ApprovalStaking = () => {
                 console.log(error)
                 setIsWalletApproving(false)
                 let err: any = error
-                toast.error((err?.code || err.data?.message || err?.message || err).toString())
+                toast.error(decodeTxErrorMessage(err))
             })
         } catch (error) {
             console.log(error)

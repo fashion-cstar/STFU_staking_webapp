@@ -8,7 +8,7 @@ import { Button } from "@mui/material"
 import { useEthers } from '@usedapp/core'
 import { useApproveCallback, useTokenAllowance } from 'src/hooks/hooks'
 import { AppTokenAddress, StakingContractAddressV2 } from 'src/constants/AppConstants'
-import { CHAIN_LABELS, formatEther, getEtherscanLink, maxStakingAmount, parseEther } from 'src/utils'
+import { CHAIN_LABELS, decodeTxErrorMessage, formatEther, getEtherscanLink, maxStakingAmount, parseEther } from 'src/utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { debounce } from "lodash"
 import { toast } from 'react-toastify'
@@ -107,7 +107,7 @@ export default function DepositModalV2({ isOpen, handleClose }: ModalProps) {
                     console.log(error)
                     setIsWalletApproving(false)
                     let err: any = error
-                    toast.error((err?.code || err.data?.message || err?.message || err).toString())
+                    toast.error(decodeTxErrorMessage(err))
                 })
             } catch (error) {
                 console.log(error)
@@ -137,7 +137,7 @@ export default function DepositModalV2({ isOpen, handleClose }: ModalProps) {
                 setIsLoading(false)
                 console.log(error)
                 let err: any = error
-                toast.error((err?.code || err.data?.message || err?.message || err).toString())
+                toast.error(decodeTxErrorMessage(err))
             })
         } catch (error) {
             setIsLoading(false)

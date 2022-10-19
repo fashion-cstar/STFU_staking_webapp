@@ -4,7 +4,7 @@ import { useState } from "react"
 import { AppTokenAddress, BUY_STFU_URL, StakingContractAddress, StakingContractAddressV2, StakingV1_LockDuration, StakingV2_LockDuration } from "src/constants/AppConstants"
 import DepositModal from "./DepositModal"
 import DepositModalV2 from "./DepositModalV2"
-import { formatEther, getShortDateTimeWithoutSeconds_, shortenAddress } from "src/utils"
+import { decodeTxErrorMessage, formatEther, getShortDateTimeWithoutSeconds_, shortenAddress } from "src/utils"
 import { useStaking, useStakingV2 } from 'src/contexts'
 import LoadingButton from "@mui/lab/LoadingButton"
 import { toast } from "react-toastify"
@@ -61,7 +61,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                 setIsClaiming(false)
                 console.log(error)
                 let err: any = error
-                toast.error((err?.code || err.data?.message || err?.message || err).toString())
+                toast.error(decodeTxErrorMessage(err))
             })
         } catch (error) {
             setIsClaiming(false)
@@ -85,7 +85,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                 setIsUnstaking(false)
                 console.log(error)
                 let err: any = error
-                toast.error((err?.code || err.data?.message || err?.message || err).toString())
+                toast.error(decodeTxErrorMessage(err))
             })
         } catch (error) {
             setIsUnstaking(false)
@@ -109,7 +109,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                 setIsClaimingV2(false)
                 console.log(error)
                 let err: any = error
-                toast.error((err?.code || err.data?.message || err?.message || err).toString())
+                toast.error(decodeTxErrorMessage(err))
             })
         } catch (error) {
             setIsClaimingV2(false)
@@ -133,7 +133,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                 setIsUnstakingV2(false)
                 console.log(error)
                 let err: any = error
-                toast.error((err?.code || err.data?.message || err?.message || err).toString())
+                toast.error(decodeTxErrorMessage(err))
             })
         } catch (error) {
             setIsUnstakingV2(false)

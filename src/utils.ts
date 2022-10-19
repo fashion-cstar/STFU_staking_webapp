@@ -287,3 +287,26 @@ export const getZeroCountFromTinyAmount = (n: any, fixedAfterLastZero: number) =
 export const maxStakingAmount = 1000000000
 
 export const maxAmount = 1000000000
+
+export const decodeTxErrorMessage = (err: any) => {
+    let message = ""
+    if (err) {
+        if (err.code) {
+            if (err.code === "ACTION_REJECTED") return "ACTION_REJECTED"
+        }
+        let index = err?.message.indexOf("execution reverted:")
+        if (index >= 0) {
+            try {
+                message = err.error.data.message
+            } catch (error) { }
+            if (message.length > 0) return message
+        }
+        if (err.reason){
+            return err.reason.toString()
+        }
+        try {
+            message = (err.data?.message || err?.message || err).toString()
+        } catch (error) { }
+    }
+    return message
+}

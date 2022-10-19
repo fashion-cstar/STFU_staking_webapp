@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useStaking, useStakingV2 } from 'src/contexts'
 import useSTFU from 'src/hooks/useSTFU'
-import { formatEther, parseEther } from 'src/utils'
+import { decodeTxErrorMessage, formatEther, parseEther } from 'src/utils'
 
 export const YourStake = ({ stakingVersion }: { stakingVersion: number }) => {
     const { account } = useEthers()
@@ -40,7 +40,7 @@ export const YourStake = ({ stakingVersion }: { stakingVersion: number }) => {
                 setIsManualCompounding(false)
                 console.log(error)
                 let err: any = error
-                toast.error((err?.code || err.data?.message || err?.message || err).toString())
+                toast.error(decodeTxErrorMessage(err))
             })
         } catch (error) {
             setIsManualCompounding(false)

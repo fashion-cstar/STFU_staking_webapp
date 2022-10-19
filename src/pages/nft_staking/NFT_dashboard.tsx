@@ -3,7 +3,7 @@ import { useEthers } from '@usedapp/core'
 import React, { useEffect, useRef, useState } from 'react'
 import { INFTokenInfo, useNFTStaking } from 'src/contexts/NFTStakingContext'
 import { toast } from 'react-toastify'
-import { formatEther, getZeroCountFromTinyAmount, shortenAddress } from 'src/utils'
+import { decodeTxErrorMessage, formatEther, getZeroCountFromTinyAmount, shortenAddress } from 'src/utils'
 import STFU_image from 'src/common/svgs/STFU_image'
 import { parseUnits } from '@ethersproject/units'
 import NFT_selectIcon from 'src/common/svgs/NFT_selectIcon'
@@ -97,7 +97,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                 console.log(error)
                 setIsClaiming(false)
                 let err: any = error
-                toast.error((err?.code || err.data?.message || err?.message || err).toString())
+                toast.error(decodeTxErrorMessage(err))
             })
         } catch (error) {
             console.log(error)
@@ -122,7 +122,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                 console.log(error)
                 setIsStaking(false)
                 let err: any = error
-                toast.error((err?.code || err.data?.message || err?.message || err).toString())
+                toast.error(decodeTxErrorMessage(err))
             })
         } catch (error) {
             console.log(error)
@@ -147,7 +147,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                 console.log(error)
                 setIsUnstaking(false)
                 let err: any = error
-                toast.error((err?.code || err.data?.message || err?.message || err).toString())
+                toast.error(decodeTxErrorMessage(err))
             })
         } catch (error) {
             console.log(error)
