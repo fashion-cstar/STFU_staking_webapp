@@ -211,7 +211,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                                         Account{`: `}<span>{account ? shortenAddress(account, 3) : ''}</span>
                                     </div>
                                     <div className='text-[22px] md:text-[25px] text-[#000] font-semibold leading-[1.1] lg:leading-[1.4]' style={{ fontFamily: 'bebas' }}>
-                                        claimable rewards:{` `}{displayClaimableRewards()}
+                                        claimable reward:{` `}{displayClaimableRewards()}
                                     </div>
                                     <div className='hidden lg:block text-[18px] md:text-[20px] text-[#000] font-semibold leading-[1.1] lg:leading-[1.4]' style={{ fontFamily: 'bebas' }}>
                                         total earned:{` `}{displayTotalEarned()}
