@@ -46,14 +46,20 @@ const theme = createTheme({
       },
       styleOverrides: {
         outlined: {
-          borderWidth: '2px'       
+          borderWidth: '2px',
+          color: "#000000"
           // borderInline: "2px solid"
         },
-        root: {          
-          textTransform: "capitalize",          
-        },        
+        root: {
+          textTransform: "capitalize",
+          "&.Mui-disabled": {
+            backgroundColor: '#E0E0E0',
+            color: '#A6A6A6'
+          }
+        },
         contained: {
           boxShadow: "none",
+          color: "#000000",
           textTransform: "capitalize",
         },
       },

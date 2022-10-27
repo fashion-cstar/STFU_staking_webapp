@@ -226,7 +226,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                                             onClick={onClaim}
                                             disabled={!account || !availableRewards.gt(BigNumber.from(0))}
                                         >
-                                            <span className='text-[25px] text-[#000000] uppercase leading-[1]'>{isClaiming ? 'Claiming ...' : 'Claim'}</span>
+                                            <span className='text-[25px] uppercase leading-[1]'>{isClaiming ? 'Claiming ...' : 'Claim'}</span>
                                         </LoadingButton>
                                     </div>}
                                     <div className='lg:hidden mt-1 text-[18px] md:text-[20px] text-[#000] font-semibold' style={{ fontFamily: 'bebas' }}>
@@ -267,7 +267,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                                 disabled={!account || stakingNFTs.length <= 0}
                             >
                                 <div className='w-full flex flex-col items-center'>
-                                    <span className='text-[22px] sm:text-[25px] text-[#000000] uppercase leading-[1.2]'>{isStaking ? 'Staking ...' : 'Stake'}</span>
+                                    <span className='text-[22px] sm:text-[25px] uppercase leading-[1.2]'>{isStaking ? 'Staking ...' : 'Stake'}</span>
                                     <span className='text-[12px] text-[#333] uppercase leading-[1]'>Selected NFTs</span>
                                 </div>
                             </LoadingButton>
@@ -293,7 +293,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                                                     color="primary"
                                                     onClick={() => onViewDetail(item)}
                                                 >
-                                                    <span className='text-[18px] sm:text-[20px] text-[#000000] uppercase leading-[1] uppercase'>{`View #${item.tokenId}`}</span>
+                                                    <span className='text-[18px] sm:text-[20px] uppercase leading-[1] uppercase'>{`View #${item.tokenId}`}</span>
                                                 </Button>
                                             </div>
                                         )
@@ -321,7 +321,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                                 disabled={!account || unstakingNFTs.length <= 0}
                             >
                                 <div className='w-full flex flex-col items-center'>
-                                    <span className='text-[22px] sm:text-[25px] text-[#000000] uppercase leading-[1.2]'>{isUnstaking ? 'Unstaking ...' : 'Unstake'}</span>
+                                    <span className='text-[22px] sm:text-[25px] uppercase leading-[1.2]'>{isUnstaking ? 'Unstaking ...' : 'Unstake'}</span>
                                     <span className='text-[12px] text-[#333] uppercase leading-[1]'>Selected NFTs</span>
                                 </div>
                             </LoadingButton>
@@ -347,7 +347,7 @@ export const NFT_dashboard = ({ setViewNFT }: { setViewNFT: (v: INFTokenInfo) =>
                                                     color="primary"
                                                     onClick={() => onViewDetail(item)}
                                                 >
-                                                    <span className='text-[18px] sm:text-[20px] text-[#000000] uppercase leading-[1] uppercase'>{`View #${item.tokenId}`}</span>
+                                                    <span className='text-[18px] sm:text-[20px] uppercase leading-[1] uppercase'>{`View #${item.tokenId}`}</span>
                                                 </Button>
                                             </div>
                                         )

@@ -181,7 +181,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                             disabled={stakingVersion === 0}
                             sx={{ border: "3px solid #7F41E4", width: '180px', height: '48px', fontFamily: 'agressive' }}
                         >
-                            <span className="text-[16px] md:text-[18px] text-black uppercase">Buy Token</span>
+                            <span className="text-[16px] md:text-[18px] uppercase">Buy Token</span>
                         </Button>
                         <Button
                             variant="contained"
@@ -190,7 +190,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                             disabled={stakingVersion === 0}
                             sx={{ borderColor: "#6FFF39", width: '180px', height: '48px', fontFamily: 'agressive' }}
                         >
-                            <span className="text-[16px] md:text-[18px] text-black uppercase">Stake</span>
+                            <span className="text-[16px] md:text-[18px] uppercase">Stake</span>
                         </Button>
                     </div>
                     <div className='w-full border border-b border-[#000000] mb-2' />
@@ -240,7 +240,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                                     onClick={onClaim}
                                     disabled={isClaiming || !account || pendingReward.lte(0) || blockTimestamp < holderUnlockTime}
                                 >
-                                    <span className='text-[20px] text-black'>{isClaiming ? 'Claiming ...' : "Claim Rewards"}</span>
+                                    <span className='text-[20px]'>{isClaiming ? 'Claiming ...' : "Claim Rewards"}</span>
                                 </LoadingButton>
                                 <LoadingButton
                                     variant="outlined"
@@ -251,7 +251,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                                     onClick={onUnstake}
                                     disabled={isUnstaking || !account || userInfo.amount.lte(0)}
                                 >
-                                    <span className='text-[20px] text-black'>{isUnstaking ? 'Unstaking ...' : "Unstake"}</span>
+                                    <span className='text-[20px]'>{isUnstaking ? 'Unstaking ...' : "Unstake"}</span>
                                 </LoadingButton>
                             </div>}
                             {stakingVersion === 2 && <div className='w-full flex justify-center gap-4 flex-wrap'>
@@ -264,7 +264,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                                     onClick={onClaimV2}
                                     disabled={isClaimingV2 || !account || pendingRewardV2.lte(0) || blockTimestamp < holderUnlockTimeV2}
                                 >
-                                    <span className='text-[20px] text-black'>{isClaimingV2 ? 'Claiming ...' : "Claim Rewards"}</span>
+                                    <span className='text-[20px]'>{isClaimingV2 ? 'Claiming ...' : "Claim Rewards"}</span>
                                 </LoadingButton>
                                 <LoadingButton
                                     variant="outlined"
@@ -275,7 +275,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                                     onClick={onUnstakeV2}
                                     disabled={isUnstakingV2 || !account || userInfoV2.amount.lte(0)}
                                 >
-                                    <span className='text-[20px] text-black'>{isUnstakingV2 ? 'Unstaking ...' : "Unstake"}</span>
+                                    <span className='text-[20px]'>{isUnstakingV2 ? 'Unstaking ...' : "Unstake"}</span>
                                 </LoadingButton>
                             </div>}
                         </div>
@@ -298,7 +298,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                                 color="secondary"
                                 onClick={() => onChooseStaking(1)}
                             >
-                                <span className='text-[20px] text-black'>{`${StakingV1_LockDuration} lock`}</span>
+                                <span className='text-[20px]'>{`${StakingV1_LockDuration} lock`}</span>
                             </Button>
                             <Button
                                 variant="outlined"
@@ -306,7 +306,7 @@ export const StakingPlatform = ({ stakingVersion, setStakingVersion }: { staking
                                 color="secondary"
                                 onClick={() => onChooseStaking(2)}
                             >
-                                <span className='text-[20px] text-black'>{`${StakingV2_LockDuration} lock`}</span>
+                                <span className='text-[20px]'>{`${StakingV2_LockDuration} lock`}</span>
                             </Button>
                         </div>
                     </div>}

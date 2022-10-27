@@ -29,7 +29,7 @@ export default function Modal({
             onClick={(e) => handleWindowClick(e)}
         >
             <div className="px-4 w-full w-auto h-auto mt-8">
-                <div className={`drop-shadow-2xl shadow]`} style={{backgroundColor: bgColor??'#111111', border: '4px solid black'}}>                    
+                <div className={`drop-shadow-2xl`} style={{backgroundColor: bgColor??'#111111', border: '4px solid black'}}>                    
                     {children}
                 </div>
             </div>

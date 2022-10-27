@@ -240,7 +240,7 @@ export default function DepositModal({ isOpen, handleClose }: ModalProps) {
                                             onClick={onDeposit}
                                             disabled={!isApproved || amount.lte(0) || amount.gt(stfuBalance) || !account}
                                         >
-                                            <span className='text-[20px] text-[#000000]'>Deposit</span>
+                                            <span className='text-[20px]'>Deposit</span>
                                         </Button>
                                     </div>
                                 </div>)}

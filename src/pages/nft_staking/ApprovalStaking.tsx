@@ -63,7 +63,7 @@ export const ApprovalStaking = () => {
                     onClick={onApprove}
                     disabled={!account || isApprovedForAll || fetchingStatus}
                 >
-                    <span className='text-[25px] md:text-[30px] text-[#000000] uppercase leading-[1]'>{isWalletApproving ? 'Approving ...' : 'Approve staking'}</span>
+                    <span className='text-[25px] md:text-[30px] uppercase leading-[1]'>{isWalletApproving ? 'Approving ...' : 'Approve staking'}</span>
                 </LoadingButton> :
                     <Wallet isMobile={false} />
                 }
