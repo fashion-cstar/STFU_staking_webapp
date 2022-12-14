@@ -166,7 +166,7 @@ export default function DepositModalV2({ isOpen, handleClose }: ModalProps) {
 
     const onInputChange = (val: any) => {
         let amount = 0
-        if (Number(val) !== NaN) amount = Number(val)
+        if (!isNaN(Number(val))) amount = Number(val)
         setAmount(parseEther(amount.toString(), 18))
     }
 
